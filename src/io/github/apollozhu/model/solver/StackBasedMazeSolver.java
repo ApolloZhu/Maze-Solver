@@ -21,7 +21,7 @@ public class StackBasedMazeSolver extends MazeSolver {
             Step lastStep = steps.peek();
             Loc cur = lastStep.getEnd();
             int curR = cur.getR(), curC = cur.getC();
-            Direction lastStepDirection = lastStep.direction;
+            Direction lastStepDirection = lastStep.getDirection();
             // First time here
             if (lastStep.pass == 0 && lastStepDirection != Direction.NONE) {
                 // Fire last step event.
@@ -93,38 +93,5 @@ public class StackBasedMazeSolver extends MazeSolver {
         }
         steps.push(nextStep);
         return true;
-    }
-
-    public static class Step {
-        private Loc start;
-        private Direction direction;
-        private int pass;
-
-        public Step(Loc start, Direction direction) {
-            this.start = start;
-            this.direction = direction == null
-                    ? Direction.NONE : direction;
-        }
-
-        public Loc getStart() {
-            return start;
-        }
-
-        public Direction getDirection() {
-            return direction;
-        }
-
-        public Loc getEnd() {
-            return direction.forward(start);
-        }
-
-        public void nextStepFailed() {
-            pass++;
-        }
-
-        @Override
-        public String toString() {
-            return "#" + pass + start + " " + direction;
-        }
     }
 }

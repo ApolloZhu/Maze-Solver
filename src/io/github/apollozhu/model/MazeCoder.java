@@ -19,10 +19,6 @@ public class MazeCoder {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-    public static int[][] getRawExampleClone() {
-        return grid.clone();
-    }
-
     public static Block[][] decodeLauMaze() {
         return decode(grid, WALL, EMPTY, VISITED, PATH);
     }

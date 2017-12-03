@@ -56,10 +56,6 @@ public class QueueBasedBFSMazeSolver extends MazeSolver {
             if (get(curR, curC) == MazeCoder.Block.EMPTY) {
                 set(curLoc, MazeCoder.Block.PATH);
                 pushAllNextStepsFrom(curLoc, end);
-            } else if (curStep.isLastStep()) {
-                Loc failed = curStep.getStart();
-                set(failed, MazeCoder.Block.VISITED);
-                forEachListener(l -> l.failed(failed.getR(), failed.getC(), null, getGrid()));
             }
             curStep = pending.isEmpty() ? null : pending.remove();
         }
@@ -67,23 +63,5 @@ public class QueueBasedBFSMazeSolver extends MazeSolver {
         boolean copy = hasPath;
         forEachListener(l -> l.ended(copy, getGrid()));
         return hasPath;
-    }
-
-    public static class Step extends StackBasedMazeSolver.Step {
-        private boolean isLastStep = false;
-
-        public Step(Loc start, Direction direction) {
-            super(start, direction);
-        }
-
-        public static Step lastStep(Loc start, Direction direction) {
-            Step step = new Step(start, direction);
-            step.isLastStep = true;
-            return step;
-        }
-
-        public boolean isLastStep() {
-            return isLastStep;
-        }
     }
 }

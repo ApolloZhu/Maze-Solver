@@ -103,15 +103,14 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
                         x + w / 2, y + h / 5);
                 break;
             case PATH:
-
+                g.setStroke(new BasicStroke(w / 10, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 multiPathPainter.paintBlock(g, r, c, x, y, w, h);
                 break;
             default:
                 break;
         }
-        if (diff != null && diff.r == r && diff.c == c) {
+        if (diff != null && diff.r == r && diff.c == c)
             diffPainter.paintBlock(g, r, c, x, y, w, h);
-        }
         g.setStroke(stroke);
     };
 

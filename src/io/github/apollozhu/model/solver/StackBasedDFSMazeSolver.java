@@ -4,8 +4,6 @@ import io.github.apollozhu.model.MazeCoder;
 
 import java.util.Stack;
 
-import static io.github.apollozhu.model.solver.StackBasedMazeSolver.Step;
-
 /**
  * @author ApolloZhu, Pd. 1
  */

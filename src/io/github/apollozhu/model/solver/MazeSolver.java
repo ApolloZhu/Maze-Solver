@@ -201,4 +201,37 @@ public abstract class MazeSolver {
             return "(" + r + "," + c + ")";
         }
     }
+
+    public static class Step {
+        private Loc start;
+        private Direction direction;
+        protected int pass;
+
+        public Step(Loc start, Direction direction) {
+            this.start = start;
+            this.direction = direction == null
+                    ? Direction.NONE : direction;
+        }
+
+        public Loc getStart() {
+            return start;
+        }
+
+        public Direction getDirection() {
+            return direction;
+        }
+
+        public Loc getEnd() {
+            return direction.forward(start);
+        }
+
+        public void nextStepFailed() {
+            pass++;
+        }
+
+        @Override
+        public String toString() {
+            return "#" + pass + start + " " + direction;
+        }
+    }
 }

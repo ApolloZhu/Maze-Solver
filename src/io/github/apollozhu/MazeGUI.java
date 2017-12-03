@@ -26,6 +26,8 @@ public class MazeGUI {
         frame.setContentPane(new MazePanel());
         frame.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
         frame.setVisible(true);
+        frame.toFront();
+        frame.requestFocus();
     }
 
     private static Image imageNamed(String name) {
