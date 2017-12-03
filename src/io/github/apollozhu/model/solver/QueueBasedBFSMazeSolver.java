@@ -9,7 +9,8 @@ import java.util.Queue;
  * @author ApolloZhu, Pd. 1
  */
 public class QueueBasedBFSMazeSolver extends MazeSolver {
-    Queue<Step> pending;
+    private Queue<Step> pending;
+    private Loc start;
 
     // Same old thing, greedy algorithm
     protected void pushAllNextStepsFrom(Loc curLoc, /*targeting*/ Loc target) {
@@ -37,13 +38,16 @@ public class QueueBasedBFSMazeSolver extends MazeSolver {
         // Setup
         pending = new LinkedList<>();
         forEachListener(l -> l.started(r, c, tR, tC, getGrid()));
-        final Loc start = new Loc(r, c), end = new Loc(tR, tC);
+        start = new Loc(r, c);
+        final Loc end = new Loc(tR, tC);
         boolean hasPath = false;
-        Step curStep = new Step(start, Direction.NONE);
+        pushAllNextStepsFrom(start, end);
+        Step curStep = pending.remove();
         // Mainloop
         while (curStep != null) {
             Step copy = curStep;
-            forEachListener(l -> l.tryout(copy.getStart().getR(), copy.getStart().getC(),
+            Loc previous = curStep.getStart();
+            forEachListener(l -> l.tryout(previous.getR(), previous.getC(),
                     copy.getDirection(), null, getGrid()));
             final Loc curLoc = curStep.getEnd();
             if (curLoc.equals(end)) {
@@ -52,10 +56,14 @@ public class QueueBasedBFSMazeSolver extends MazeSolver {
                 forEachListener(l -> l.found(tR, tC, null, getGrid()));
                 break;
             }
-            int curR = curLoc.getR(), curC = curLoc.getC();
-            if (get(curR, curC) == MazeCoder.Block.EMPTY) {
+            if (get(curLoc) == MazeCoder.Block.EMPTY) {
                 set(curLoc, MazeCoder.Block.PATH);
                 pushAllNextStepsFrom(curLoc, end);
+            } else {
+                if (pending.isEmpty()) break;
+                Step next = pending.peek();
+                if (!next.getStart().equals(previous))
+                    failIfNeeded(previous.getR(), previous.getC());
             }
             curStep = pending.isEmpty() ? null : pending.remove();
         }
@@ -63,5 +71,34 @@ public class QueueBasedBFSMazeSolver extends MazeSolver {
         boolean copy = hasPath;
         forEachListener(l -> l.ended(copy, getGrid()));
         return hasPath;
+    }
+
+    private void failIfNeeded(int r, int c) {
+        if (get(r, c) == MazeCoder.Block.PATH
+                && isInaccessible(r, c)) fail(r, c);
+    }
+
+    private void fail(int r, int c) {
+        if (start.getR() == r && start.getC() == c) return;
+        set(r, c, MazeCoder.Block.VISITED);
+        forEachListener(l -> l.failed(r, c, null, getGrid()));
+        failIfNeeded(r + 1, c);
+        failIfNeeded(r, c + 1);
+        failIfNeeded(r - 1, c);
+        failIfNeeded(r, c - 1);
+    }
+
+    private boolean isInaccessible(int r, int c) {
+        int count = 0;
+        if (isAccessible(r + 1, c)) count++;
+        if (isAccessible(r, c + 1)) count++;
+        if (isAccessible(r - 1, c)) count++;
+        if (isAccessible(r, c - 1)) count++;
+        return count == 1;
+    }
+
+    private boolean isAccessible(int r, int c) {
+        MazeCoder.Block block = get(r, c);
+        return block == MazeCoder.Block.PATH || block == MazeCoder.Block.EMPTY;
     }
 }

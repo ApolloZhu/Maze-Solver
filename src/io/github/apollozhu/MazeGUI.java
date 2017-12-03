@@ -13,7 +13,19 @@ import java.lang.reflect.Method;
 public class MazeGUI {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
+        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        frame.setContentPane(new MazePanel());
+        frame.setVisible(true);
+        frame.toFront();
+        frame.requestFocus();
+        Desktop.getDesktop().requestForeground(true);
+        customizeFrame(frame);
+        customizeApp(frame);
+    }
 
+    private static void customizeFrame(JFrame frame) {
+        frame.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(imageNamed("Icon.png"));
         try {
             // FIXME: Will be deprecated by Java 9+
@@ -26,13 +38,9 @@ public class MazeGUI {
             frame.setIconImage(imageNamed("Icon-Mac.png"));
         } catch (Exception e) {
         }
-        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setContentPane(new MazePanel());
-        frame.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.toFront();
-        frame.requestFocus();
+    }
+
+    private static void customizeApp(JFrame frame) {
         Desktop desktop = Desktop.getDesktop();
         // Add more menus to menubar
         // JMenuBar: File, Edit, ... Help
@@ -43,17 +51,7 @@ public class MazeGUI {
         // desktop.setOpenFileHandler();
         // desktop.setOpenURIHandler();
         // desktop.openHelpViewer();
-        desktop.requestForeground(true);
-        desktop.setAboutHandler(e -> {
-            JDialog dialog = new JDialog(frame, "About Maze Solver", true);
-            dialog.setSize(new Dimension(300, 325));
-            dialog.setContentPane(new AboutPanel(frame));
-            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            dialog.setLocation((screenSize.width - dialog.getWidth()) / 2,
-                    (screenSize.height - dialog.getHeight()) / 2);
-            dialog.setResizable(false);
-            dialog.setVisible(true);
-        });
+        desktop.setAboutHandler(e -> AboutPanel.showOn(frame));
     }
 
     private static Image imageNamed(String name) {

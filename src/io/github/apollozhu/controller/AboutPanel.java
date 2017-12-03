@@ -13,7 +13,7 @@ public class AboutPanel extends JPanel {
 
     private final JPanel infoPanel, copyrightsPanel;
 
-    public AboutPanel(JFrame parent) {
+    private AboutPanel(Frame parent) {
         setLayout(new BorderLayout());
         add(infoPanel = new JPanel(), BorderLayout.CENTER);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
@@ -57,5 +57,16 @@ public class AboutPanel extends JPanel {
         } catch (Exception e) {
 
         }
+    }
+
+    public static void showOn(Frame frame) {
+        JDialog dialog = new JDialog(frame, "About Maze Solver", true);
+        dialog.setSize(new Dimension(300, 325));
+        dialog.setContentPane(new AboutPanel(frame));
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setLocation((screenSize.width - dialog.getWidth()) / 2,
+                (screenSize.height - dialog.getHeight()) / 2);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
     }
 }

@@ -203,9 +203,10 @@ public abstract class MazeSolver {
     }
 
     public static class Step {
-        private Loc start;
-        private Direction direction;
+        private final Loc start;
+        private final Direction direction;
         protected int pass;
+        private Loc end;
 
         public Step(Loc start, Direction direction) {
             this.start = start;
@@ -222,7 +223,8 @@ public abstract class MazeSolver {
         }
 
         public Loc getEnd() {
-            return direction.forward(start);
+            if (end != null) return end;
+            return end = direction.forward(start);
         }
 
         public void nextStepFailed() {
