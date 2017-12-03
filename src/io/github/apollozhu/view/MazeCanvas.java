@@ -1,7 +1,7 @@
 package io.github.apollozhu.view;
 
-import io.github.apollozhu.model.MazeCoder;
-import io.github.apollozhu.model.solver.MazeSolver;
+import io.github.apollozhu.model.MazeBlock;
+import io.github.apollozhu.solver.MazeSolver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
     private static final Color COMMON_COLOR_NORMAL = Color.blue;
     private static final Color COMMON_COLOR_FAILED = Color.orange;
     List<BlockPainter> painters = new LinkedList<>();
-    private MazeCoder.Block[][] map;
+    private MazeBlock[][] map;
     private final BlockPainter wallPainter = dependentPainter(() -> Color.black,
             (r, c, i, j) -> (i != r || j != c) && isWall(i, j));
     private Path[][] paths;
@@ -71,7 +71,7 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
     private final BlockPainter multiPathPainter = dependentPainter(() -> commonColor,
             (r, c, i, j) -> (i == r || j == c) && isPath(i, j));
     private Path diff = null;
-    private MazeSolver.Loc start, end;
+    private MazeBlock.Location start, end;
     private final BlockPainter painter = (graphics, r, c, x, y, w, h) -> {
         Graphics2D g = (Graphics2D) graphics;
 
@@ -114,7 +114,7 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
         g.setStroke(stroke);
     };
 
-    public MazeCanvas(MazeCoder.Block[][] map) {
+    public MazeCanvas(MazeBlock[][] map) {
         setMap(map);
     }
 
@@ -143,28 +143,28 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
     }
 
     public boolean isWall(int r, int c) {
-        return get(r, c) == MazeCoder.Block.WALL;
+        return get(r, c) == MazeBlock.WALL;
     }
 
     public boolean isPath(int r, int c) {
-        return get(r, c) == MazeCoder.Block.PATH;
+        return get(r, c) == MazeBlock.PATH;
     }
 
-    public MazeCoder.Block get(int r, int c) {
+    public MazeBlock get(int r, int c) {
         try {
             return map[r][c];
         } catch (Exception e) {
-            return MazeCoder.Block.WALL;
+            return MazeBlock.WALL;
         }
     }
 
-    public void resetMap(MazeCoder.Block[][] map) {
+    public void resetMap(MazeBlock[][] map) {
         this.map = map;
         reset();
         repaint();
     }
 
-    public void setMap(MazeCoder.Block[][] map) {
+    public void setMap(MazeBlock[][] map) {
         this.map = map;
         repaint();
     }
@@ -199,7 +199,7 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
             }
     }
 
-    public MazeSolver.Loc getLoc(int x, int y) {
+    public MazeBlock.Location getLoc(int x, int y) {
         if (map == null || map.length == 0 || map[0].length == 0) return null;
         int side = Math.min(getWidth() / map[0].length,
                 getHeight() / map.length);
@@ -208,15 +208,15 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
         int r = (y - yOffset) / side;
         int c = (x - xOffset) / side;
         if (r < 0 || c < 0 || r >= map.length || c >= map[0].length) return null;
-        return new MazeSolver.Loc(r, c);
+        return new MazeBlock.Location(r, c);
     }
 
-    public void setStart(MazeSolver.Loc start) {
+    public void setStart(MazeBlock.Location start) {
         this.start = start;
         repaint();
     }
 
-    public void setTarget(MazeSolver.Loc target) {
+    public void setTarget(MazeBlock.Location target) {
         this.end = target;
         repaint();
     }
@@ -227,28 +227,28 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
     }
 
     @Override
-    public void started(int r, int c, int tR, int tC, MazeCoder.Block[][] map) {
-        setStart(new MazeSolver.Loc(r, c));
-        setTarget(new MazeSolver.Loc(tR, tC));
+    public void started(int r, int c, int tR, int tC, MazeBlock[][] map) {
+        setStart(new MazeBlock.Location(r, c));
+        setTarget(new MazeBlock.Location(tR, tC));
         resetMap(map);
     }
 
     @Override
-    public void tryout(int r, int c, MazeSolver.Direction direction, Object path, MazeCoder.Block[][] map) {
+    public void tryout(int r, int c, MazeSolver.Direction direction, Object path, MazeBlock[][] map) {
         diffColor = DIFF_COLOR_NEW;
         paths[r][c] = diff = new Path(r, c, direction);
         setMap(map);
     }
 
     @Override
-    public void found(int tR, int tC, Object path, MazeCoder.Block[][] map) {
+    public void found(int tR, int tC, Object path, MazeBlock[][] map) {
         commonColor = COMMON_COLOR_FOUND;
         diff = null;
         setMap(map);
     }
 
     @Override
-    public void failed(int r, int c, Object path, MazeCoder.Block[][] map) {
+    public void failed(int r, int c, Object path, MazeBlock[][] map) {
         diffColor = COMMON_COLOR_FAILED;
         diff = paths[r][c];
         paths[r][c] = null;
@@ -256,7 +256,7 @@ public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
     }
 
     @Override
-    public void ended(boolean hasPath, MazeCoder.Block[][] map) {
+    public void ended(boolean hasPath, MazeBlock[][] map) {
         commonColor = hasPath ? COMMON_COLOR_FOUND : COMMON_COLOR_FAILED;
         diff = null;
         setMap(map);

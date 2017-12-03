@@ -1,7 +1,9 @@
 package io.github.apollozhu.controller;
 
-import io.github.apollozhu.model.MazeCoder;
-import io.github.apollozhu.model.solver.MazeSolver;
+import io.github.apollozhu.model.Maze;
+import io.github.apollozhu.model.MazeBlock;
+import io.github.apollozhu.model.MazeFile;
+import io.github.apollozhu.solver.MazeSolver;
 import io.github.apollozhu.view.MazeCanvas;
 import io.github.apollozhu.view.SpringUtilities;
 
@@ -10,13 +12,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
  * @author ApolloZhu, Pd. 1
  */
 public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListener {
-    private static final MazeCoder.Block[][] LAU_MAZE = MazeCoder.decodeLauMaze();
+    //    private static final MazeBlock[][] LAU_MAZE = Maze.decodeLauMaze();
+    private static final MazeBlock[][] LAU_MAZE = MazeFile.read(Paths.get(
+            "/Users/Apollonian/Desktop", "8_13_0_0_1_1.maze"
+    )).getMap();
+
     private static MazeSolver.Type[] types = MazeSolver.Type.values();
     private final JButton pickStartButton, pickEndButton, editWallButton;
     private final JComboBox<String> solverComboBox;
@@ -26,8 +33,8 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     private MazeSolver solver;
     private MazeCanvas canvas;
     private boolean isSelectingStart, isSelectingEnd, isEditingWall;
-    private MazeSolver.Loc start, end;
-    private MazeCoder.Block[][] map;
+    private MazeBlock.Location start, end;
+    private MazeBlock[][] map;
     private int selectedSolverIndex;
     private double pathPercentage = 0.7;
 
@@ -94,20 +101,20 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
                 MazeCanvas canvas = (MazeCanvas) getCenterComponent();
                 int x = e.getX() - canvas.getX();
                 int y = e.getY() - canvas.getY();
-                MazeSolver.Loc loc = canvas.getLoc(x, y);
-                if (loc == null || loc.getR() < 0 || loc.getC() < 0
-                        || loc.getR() >= map.length || loc.getC() >= map[loc.getR()].length) return;
-                boolean notWall = !canvas.isWall(loc.getR(), loc.getC());
+                MazeBlock.Location location = canvas.getLoc(x, y);
+                if (location == null || location.getR() < 0 || location.getC() < 0
+                        || location.getR() >= map.length || location.getC() >= map[location.getR()].length) return;
+                boolean notWall = !canvas.isWall(location.getR(), location.getC());
                 if (isSelectingStart && notWall) {
-                    canvas.setStart(start = loc);
+                    canvas.setStart(start = location);
                     isSelectingStart = false;
                 } else if (isSelectingEnd && notWall) {
-                    canvas.setTarget(end = loc);
+                    canvas.setTarget(end = location);
                     isSelectingEnd = false;
-                } else if (isEditingWall && !loc.equals(start) && !loc.equals(end)) {
-                    MazeCoder.clear(map);
+                } else if (isEditingWall && !location.equals(start) && !location.equals(end)) {
+                    Maze.clear(map);
                     canvas.setMap(map);
-                    map[loc.getR()][loc.getC()] = notWall ? MazeCoder.Block.WALL : MazeCoder.Block.EMPTY;
+                    map[location.getR()][location.getC()] = notWall ? MazeBlock.WALL : MazeBlock.EMPTY;
                     canvas.setMap(map);
                 } else return;
                 clearMap();
@@ -164,7 +171,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         } catch (Exception e) {
         }
         percentageTextField.setText("" + (pathPercentage = newPrecentage));
-        setMap(MazeCoder.generate(newR, newC, pathPercentage));
+        setMap(Maze.generate(newR, newC, pathPercentage));
     }
 
     @Override
@@ -192,45 +199,45 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         super.terminate();
     }
 
-    protected void setMap(MazeCoder.Block[][] newMap) {
+    protected void setMap(MazeBlock[][] newMap) {
         map = newMap.clone();
         canvas.resetMap(map);
         resetStartEnd();
     }
 
     protected void resetStartEnd() {
-        map[0][0] = map[map.length - 1][map[0].length - 1] = MazeCoder.Block.EMPTY;
-        canvas.setStart(start = new MazeSolver.Loc(0, 0));
-        canvas.setTarget(end = new MazeSolver.Loc(map.length - 1, map[0].length - 1));
+        map[0][0] = map[map.length - 1][map[0].length - 1] = MazeBlock.EMPTY;
+        canvas.setStart(start = new MazeBlock.Location(0, 0));
+        canvas.setTarget(end = new MazeBlock.Location(map.length - 1, map[0].length - 1));
     }
 
     protected void clearMap() {
-        MazeCoder.clear(map);
+        Maze.clear(map);
         canvas.resetMap(map);
     }
 
     @Override
-    public void started(int r, int c, int tR, int tC, MazeCoder.Block[][] map) {
+    public void started(int r, int c, int tR, int tC, MazeBlock[][] map) {
         sleep();
     }
 
     @Override
-    public void tryout(int r, int c, MazeSolver.Direction direction, Object path, MazeCoder.Block[][] map) {
+    public void tryout(int r, int c, MazeSolver.Direction direction, Object path, MazeBlock[][] map) {
         sleep();
     }
 
     @Override
-    public void found(int tR, int tC, Object path, MazeCoder.Block[][] map) {
+    public void found(int tR, int tC, Object path, MazeBlock[][] map) {
         sleep();
     }
 
     @Override
-    public void failed(int r, int c, Object path, MazeCoder.Block[][] map) {
+    public void failed(int r, int c, Object path, MazeBlock[][] map) {
         sleep();
     }
 
     @Override
-    public void ended(boolean hasPath, MazeCoder.Block[][] map) {
+    public void ended(boolean hasPath, MazeBlock[][] map) {
         JOptionPane.showMessageDialog(this, hasPath ? "It is doable." : "Can do better.");
         terminate(hasPath);
     }

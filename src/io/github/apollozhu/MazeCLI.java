@@ -1,35 +1,37 @@
 package io.github.apollozhu;
 
+import io.github.apollozhu.model.Maze;
+import io.github.apollozhu.model.MazeBlock;
 import io.github.apollozhu.model.MazeCoder;
-import io.github.apollozhu.model.solver.MazeSolver;
-import io.github.apollozhu.model.solver.RecursiveMazeSolver;
+import io.github.apollozhu.solver.MazeSolver;
+import io.github.apollozhu.solver.RecursiveMazeSolver;
 
 import java.util.Scanner;
 
 public class MazeCLI {
-    private static int[][] grid = MazeCoder.encode(MazeCoder.decodeLauMaze(), 0, 1, 3, 7);
+    private static int[][] grid = MazeCoder.encode(Maze.decodeLauMaze());
     private static RecursiveMazeSolver solver = new RecursiveMazeSolver();
     private static RecursiveMazeSolver.MSEventListener listener = new MazeSolver.MSEventListener<String>() {
         @Override
-        public void started(int r, int c, int tR, int tC, MazeCoder.Block[][] map) {
+        public void started(int r, int c, int tR, int tC, MazeBlock[][] map) {
         }
 
         @Override
-        public void tryout(int r, int c, MazeSolver.Direction direction, String path, MazeCoder.Block[][] map) {
+        public void tryout(int r, int c, MazeSolver.Direction direction, String path, MazeBlock[][] map) {
         }
 
         @Override
-        public void found(int tR, int tC, String path, MazeCoder.Block[][] map) {
+        public void found(int tR, int tC, String path, MazeBlock[][] map) {
             System.out.println(path);
         }
 
         @Override
-        public void failed(int r, int c, String path, MazeCoder.Block[][] map) {
+        public void failed(int r, int c, String path, MazeBlock[][] map) {
         }
 
         @Override
-        public void ended(boolean hasPath, MazeCoder.Block[][] map) {
-            grid = MazeCoder.encode(map, 0, 1, 3, 7);
+        public void ended(boolean hasPath, MazeBlock[][] map) {
+            grid = MazeCoder.encode(map);
         }
     };
 

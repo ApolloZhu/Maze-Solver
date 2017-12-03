@@ -3,52 +3,41 @@ package io.github.apollozhu.model;
 /**
  * @author ApolloZhu, Pd. 1
  */
-public class MazeCoder {
-    private static final int VISITED = 3;
-    private static final int PATH = 7;
+public enum MazeCoder {
+    ;
     private static final int WALL = 0;
     private static final int EMPTY = 1;
-    private static final int[][] grid = {
-            {1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1},
-            {1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1},
-            {0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0},
-            {1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1},
-            {1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1},
-            {1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    };
+    private static final int VISITED = 3;
+    private static final int PATH = 7;
 
-    public static Block[][] decodeLauMaze() {
-        return decode(grid, WALL, EMPTY, VISITED, PATH);
+    public static MazeBlock[][] decode(int[][] intMap) {
+        return decode(intMap, WALL, EMPTY, VISITED, PATH);
     }
 
-    public static Block[][] decode(int[][] intMap, int wall, int empty, int visited, int path) {
-        Block[][] converted = new Block[intMap.length][intMap[0].length];
+    public static MazeBlock[][] decode(int[][] intMap, int wall, int empty, int visited, int path) {
+        MazeBlock[][] converted = new MazeBlock[intMap.length][intMap[0].length];
         for (int i = 0; i < intMap.length; i++)
             for (int j = 0; j < intMap[i].length; j++)
-                if (intMap[i][j] == wall) converted[i][j] = Block.WALL;
-                else if (intMap[i][j] == empty) converted[i][j] = Block.EMPTY;
-                else if (intMap[i][j] == visited) converted[i][j] = Block.VISITED;
-                else if (intMap[i][j] == path) converted[i][j] = Block.PATH;
+                if (intMap[i][j] == wall) converted[i][j] = MazeBlock.WALL;
+                else if (intMap[i][j] == empty) converted[i][j] = MazeBlock.EMPTY;
+                else if (intMap[i][j] == visited) converted[i][j] = MazeBlock.VISITED;
+                else if (intMap[i][j] == path) converted[i][j] = MazeBlock.PATH;
         return converted;
     }
 
-    public static int[][] encode(Block[][] map, int wall, int empty, int visited, int path) {
+    public static int[][] encode(MazeBlock[][] map) {
+        return encode(map, WALL, EMPTY, VISITED, PATH);
+    }
+
+    public static int[][] encode(MazeBlock[][] map, int wall, int empty, int visited, int path) {
         int[][] converted = new int[map.length][map[0].length];
         for (int i = 0; i < map.length; i++)
             for (int j = 0; j < map[i].length; j++)
-                if (map[i][j] == Block.WALL) converted[i][j] = wall;
-                else if (map[i][j] == Block.EMPTY) converted[i][j] = empty;
-                else if (map[i][j] == Block.VISITED) converted[i][j] = visited;
-                else if (map[i][j] == Block.PATH) converted[i][j] = path;
+                if (map[i][j] == MazeBlock.WALL) converted[i][j] = wall;
+                else if (map[i][j] == MazeBlock.EMPTY) converted[i][j] = empty;
+                else if (map[i][j] == MazeBlock.VISITED) converted[i][j] = visited;
+                else if (map[i][j] == MazeBlock.PATH) converted[i][j] = path;
         return converted;
-    }
-
-    public static void clear(Block[][] map) {
-        for (int i = 0; i < map.length; i++)
-            for (int j = 0; j < map[i].length; j++)
-                map[i][j] = map[i][j] == Block.WALL ? Block.WALL : Block.EMPTY;
     }
 
     public static void print(int[][] grid) {
@@ -64,15 +53,4 @@ public class MazeCoder {
         }
         return sb.toString();
     }
-
-    public static Block[][] generate(int r, int c, double emptyPossibility) {
-        emptyPossibility = Math.max(Math.min(1, emptyPossibility), 0);
-        Block[][] map = new Block[r][c];
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                map[i][j] = Math.random() < emptyPossibility ? Block.EMPTY : Block.WALL;
-        return map;
-    }
-
-    public enum Block {WALL, EMPTY, VISITED, PATH}
 }

@@ -1,6 +1,6 @@
-package io.github.apollozhu.model.solver;
+package io.github.apollozhu.solver;
 
-import io.github.apollozhu.model.MazeCoder;
+import io.github.apollozhu.model.MazeBlock;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -16,15 +16,15 @@ public class RecursiveMazeSolver extends MazeSolver {
     @SuppressWarnings({"unchecked"})
     private boolean findAnExitHelper(int x, int y, int tX, int tY, String path, Direction direction) {
         if (direction != null) {
-            Loc back = direction.reverse(x, y);
+            MazeBlock.Location back = direction.reverse(x, y);
             forEachListener(l -> l.tryout(back.getR(), back.getC(), direction, path, getGrid()));
         } else forEachListener(l -> l.started(x, y, tX, tY, getGrid()));
-        if (get(x, y) != MazeCoder.Block.EMPTY) return false;
+        if (get(x, y) != MazeBlock.EMPTY) return false;
 
         String newPath = path + "[" + x + "," + y + "]";
-        set(x, y, MazeCoder.Block.PATH);
+        set(x, y, MazeBlock.PATH);
         if (x == tX && y == tY) {
-            set(tX, tY, MazeCoder.Block.PATH);
+            set(tX, tY, MazeBlock.PATH);
             forEachListener(l -> l.found(x, y, newPath, getGrid()));
             return true;
         }
@@ -49,7 +49,7 @@ public class RecursiveMazeSolver extends MazeSolver {
                     || findAnExitHelper(x - 1, y, tX, tY, newPath, Direction.UP)) return true;
         }
         if (direction != null) {
-            set(x, y, MazeCoder.Block.VISITED);
+            set(x, y, MazeBlock.VISITED);
             forEachListener(l -> l.failed(x, y, path, getGrid()));
         }
         return false;
