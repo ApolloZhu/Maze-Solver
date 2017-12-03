@@ -5,6 +5,8 @@ import io.github.apollozhu.view.SpringUtilities;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -37,7 +39,18 @@ public abstract class PlaybackPanel extends JPanel {
                     pauseResume.setText("Pause");
                     pauseResume.setEnabled(true);
                     thread = Thread.currentThread();
-                    start();
+                    try {
+                        start();
+                    } catch (Throwable t) {
+                        if (t instanceof ThreadDeath) return;
+                        String message = t.getLocalizedMessage();
+                        if (message == null || message.isEmpty())
+                            message = "Something went wrong. Please see system log for details.";
+                        Logger.getGlobal().log(Level.WARNING, "Subclass implementation failed", t);
+                        JOptionPane.showMessageDialog(this,
+                                message, "Oops!", JOptionPane.WARNING_MESSAGE);
+                        terminate();
+                    }
                 } else terminate();
             }).start();
         });
@@ -94,7 +107,7 @@ public abstract class PlaybackPanel extends JPanel {
             if (scaleFactor == MAX) return; // Non stop
             double percentage = Math.max(scaleFactor / 100, 0.1);
             long interval = (long) (unit * 50 / percentage);
-            thread.sleep(interval);
+            Thread.sleep(interval);
         } catch (Exception e) {
         }
     }

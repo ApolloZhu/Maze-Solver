@@ -147,21 +147,24 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         int r = map.length, c = map[0].length, newR = r, newC = c;
         double newPrecentage = pathPercentage;
         try {
-            newR = Integer.parseUnsignedInt(rowTextField.getText());
+            newR = Integer.parseInt(rowTextField.getText());
+            newR = Math.max(Math.min(newR, canvas.getHeight()), 0);
         } catch (Exception e) {
-            rowTextField.setText("" + r);
         }
+        rowTextField.setText("" + newR);
         try {
-            newC = Integer.parseUnsignedInt(columnTextField.getText());
+            newC = Integer.parseInt(columnTextField.getText());
+            newC = Math.max(Math.min(newC, canvas.getWidth()), 0);
         } catch (Exception e) {
-            columnTextField.setText("" + c);
         }
+        columnTextField.setText("" + newC);
         try {
             newPrecentage = Double.parseDouble(percentageTextField.getText());
+            newPrecentage = Math.max(Math.min(newPrecentage, 1), 0);
         } catch (Exception e) {
-            percentageTextField.setText("" + pathPercentage);
         }
-        setMap(MazeCoder.generate(newR, newC, pathPercentage = newPrecentage));
+        percentageTextField.setText("" + (pathPercentage = newPrecentage));
+        setMap(MazeCoder.generate(newR, newC, pathPercentage));
     }
 
     @Override
@@ -230,5 +233,13 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     public void ended(boolean hasPath, MazeCoder.Block[][] map) {
         JOptionPane.showMessageDialog(this, hasPath ? "It is doable." : "Can do better.");
         terminate(hasPath);
+    }
+
+    @Override
+    public void doLayout() {
+        super.doLayout();
+        if (map != null && map.length > canvas.getHeight() ||
+                map.length != 0 && map[0].length > canvas.getWidth())
+            regenerateMap(null);
     }
 }
