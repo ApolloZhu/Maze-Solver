@@ -1,4 +1,4 @@
-package io.github.apollozhu;
+package io.github.apollozhu.model;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -19,11 +19,11 @@ public class MazeCoder {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
-    static int[][] getRawExample() {
-        return grid;
+    public static int[][] getRawExampleClone() {
+        return grid.clone();
     }
 
-    public static Block[][] EXAMPLE() {
+    public static Block[][] decodeLauMaze() {
         return decode(grid, WALL, EMPTY, VISITED, PATH);
     }
 

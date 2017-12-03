@@ -1,4 +1,6 @@
-package io.github.apollozhu;
+package io.github.apollozhu.model.solver;
+
+import io.github.apollozhu.model.MazeCoder;
 
 import javax.swing.event.EventListenerList;
 import java.util.EventListener;
@@ -75,7 +77,7 @@ public abstract class MazeSolver {
             consumer.accept(l);
     }
 
-    enum Type {
+    public enum Type {
         RECURSIVE, STACK, DFS, BFS;
 
         Class associatedClass() {
@@ -92,7 +94,7 @@ public abstract class MazeSolver {
             throw new EnumConstantNotPresentException(Type.class, name());
         }
 
-        MazeSolver init() {
+        public MazeSolver init() {
             switch (this) {
                 case RECURSIVE:
                     return new RecursiveMazeSolver();
@@ -106,7 +108,7 @@ public abstract class MazeSolver {
             throw new EnumConstantNotPresentException(Type.class, name());
         }
 
-        String description() {
+        public String description() {
             switch (this) {
                 case RECURSIVE:
                     return "Recursive";
@@ -124,19 +126,19 @@ public abstract class MazeSolver {
     public enum Direction {
         UP, RIGHT, DOWN, LEFT, NONE;
 
-        Loc reverse(int r, int c) {
+        public Loc reverse(int r, int c) {
             return new Loc(r - dx(), c - dy());
         }
 
-        Loc forward(Loc loc) {
+        public Loc forward(Loc loc) {
             return forward(loc.getR(), loc.getC());
         }
 
-        Loc forward(int r, int c) {
+        public Loc forward(int r, int c) {
             return new Loc(r + dx(), c + dy());
         }
 
-        int dx() {
+        public int dx() {
             switch (this) {
                 case DOWN:
                     return 1;
@@ -146,7 +148,7 @@ public abstract class MazeSolver {
             return 0;
         }
 
-        int dy() {
+        public int dy() {
             switch (this) {
                 case RIGHT:
                     return 1;

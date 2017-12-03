@@ -1,8 +1,10 @@
-package io.github.apollozhu;
+package io.github.apollozhu.model.solver;
+
+import io.github.apollozhu.model.MazeCoder;
 
 import java.util.Stack;
 
-import static io.github.apollozhu.StackBasedMazeSolver.Step;
+import static io.github.apollozhu.model.solver.StackBasedMazeSolver.Step;
 
 /**
  * @author ApolloZhu, Pd. 1

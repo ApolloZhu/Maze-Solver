@@ -1,4 +1,4 @@
-package io.github.apollozhu;
+package io.github.apollozhu.view;
 
 import javax.swing.*;
 import java.awt.*;

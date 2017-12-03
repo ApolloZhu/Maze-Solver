@@ -1,4 +1,6 @@
-package io.github.apollozhu;
+package io.github.apollozhu.model.solver;
+
+import io.github.apollozhu.model.MazeCoder;
 
 import java.util.Stack;
 

@@ -1,4 +1,7 @@
-package io.github.apollozhu;
+package io.github.apollozhu.view;
+
+import io.github.apollozhu.model.MazeCoder;
+import io.github.apollozhu.model.solver.MazeSolver;
 
 import javax.swing.*;
 import java.awt.*;

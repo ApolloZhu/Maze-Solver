@@ -1,6 +1,7 @@
-package io.github.apollozhu;
+package io.github.apollozhu.controller;
 
 import com.sun.javafx.runtime.async.BackgroundExecutor;
+import io.github.apollozhu.view.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;

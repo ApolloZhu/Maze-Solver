@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.github.apollozhu;
+package io.github.apollozhu.view;
 
 import javax.swing.*;
 import java.awt.*;

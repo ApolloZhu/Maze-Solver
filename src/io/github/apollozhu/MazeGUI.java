@@ -1,5 +1,7 @@
 package io.github.apollozhu;
 
+import io.github.apollozhu.controller.MazePanel;
+
 import javax.swing.*;
 import java.awt.*;
 

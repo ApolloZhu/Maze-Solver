@@ -1,4 +1,9 @@
-package io.github.apollozhu;
+package io.github.apollozhu.controller;
+
+import io.github.apollozhu.model.MazeCoder;
+import io.github.apollozhu.model.solver.MazeSolver;
+import io.github.apollozhu.view.MazeCanvas;
+import io.github.apollozhu.view.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +16,7 @@ import java.util.Arrays;
  * @author ApolloZhu, Pd. 1
  */
 public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListener {
+    private static final MazeCoder.Block[][] LAU_MAZE = MazeCoder.decodeLauMaze();
     private static MazeSolver.Type[] types = MazeSolver.Type.values();
     private final JButton pickStartButton, pickEndButton, editWallButton;
     private final JComboBox<String> solverComboBox;
@@ -33,11 +39,11 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         mapGenerationControlPanel.setLayout(new SpringLayout());
 
         mapGenerationControlPanel.add(new JLabel("Row: "));
-        mapGenerationControlPanel.add(rowTextField = new JTextField("" + MazeCoder.getRawExample().length));
+        mapGenerationControlPanel.add(rowTextField = new JTextField("" + LAU_MAZE.length));
         rowTextField.addActionListener(this::regenerateMap);
         mapGenerationControlPanel.add(new JLabel("Column: "));
         mapGenerationControlPanel.add(
-                columnTextField = new JTextField("" + MazeCoder.getRawExample()[0].length));
+                columnTextField = new JTextField("" + LAU_MAZE[0].length));
         columnTextField.addActionListener(this::regenerateMap);
         mapGenerationControlPanel.add(new JLabel("Path percentage: "));
         mapGenerationControlPanel.add(percentageTextField = new JTextField("" + pathPercentage));
@@ -101,9 +107,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
                 } else if (isEditingWall && !loc.equals(start) && !loc.equals(end)) {
                     MazeCoder.clear(map);
                     canvas.setMap(map);
-                    map[loc.getR()][loc.getC()] = notWall
-                            ? MazeCoder.Block.WALL
-                            : MazeCoder.Block.EMPTY;
+                    map[loc.getR()][loc.getC()] = notWall ? MazeCoder.Block.WALL : MazeCoder.Block.EMPTY;
                     canvas.setMap(map);
                 } else return;
                 clearMap();
@@ -116,7 +120,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     protected Component getCenterComponent() {
         if (canvas != null) return canvas;
         if (map != null) return canvas = new MazeCanvas(map);
-        return canvas = new MazeCanvas(map = MazeCoder.EXAMPLE());
+        return canvas = new MazeCanvas(map = LAU_MAZE);
     }
 
     protected void setMazeSolverAtIndex(int index) {
