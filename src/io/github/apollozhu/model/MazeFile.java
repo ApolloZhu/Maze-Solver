@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * r c sR sC tR tC HEX
@@ -12,7 +14,7 @@ import java.util.BitSet;
 public enum MazeFile {
     ;
 
-    public static boolean write(Info info, String directory) {
+    public static String write(Info info, String directory) {
         StringBuilder sb = new StringBuilder();
         int r = info.map.length;
         int c = info.map[0].length;
@@ -20,19 +22,24 @@ public enum MazeFile {
         int sC = info.start.getC();
         int tR = info.end.getR();
         int tC = info.end.getC();
-        if (!isValid(r, c, sR, sC, tR, tC)) return false;
+        Logger.getGlobal().log(Level.INFO, "validate");
+        if (!isValid(r, c, sR, sC, tR, tC)) return null;
+        Logger.getGlobal().log(Level.INFO, "is valid");
 
         sb.append(r).append('_').append(c).append('_');
         sb.append(sR).append('_').append(sC).append('_');
         sb.append(tR).append('_').append(tC).append(".maze");
         String fileName = sb.toString();
+        Logger.getGlobal().log(Level.INFO, fileName);
 
         try {
             Path path = Paths.get(directory, fileName);
+            Logger.getGlobal().log(Level.INFO, path.toString());
             Files.write(path, toByteArray(info.map));
-            return true;
-        } catch (Exception e) {
-            return false;
+            return path.toAbsolutePath().toString();
+        } catch (Throwable e) {
+            Logger.getGlobal().log(Level.WARNING, "Failed to save to path", e);
+            return null;
         }
     }
 
@@ -65,24 +72,17 @@ public enum MazeFile {
             for (int j = 0; j < c; j++, k++)
                 if (map[i][j] == MazeBlock.WALL)
                     set.flip(k);
-        System.out.println(set);
         return set.toByteArray();
     }
 
     private static MazeBlock[][] fromByteArray(byte[] bytes, int r, int c) {
         BitSet set = BitSet.valueOf(bytes);
-        System.out.println(set);
         MazeBlock[][] map = new MazeBlock[r][c];
         for (int i = 0, k = 0; i < r; i++)
             for (int j = 0; j < c; j++, k++)
                 if (set.get(k)) map[i][j] = MazeBlock.WALL;
                 else map[i][j] = MazeBlock.EMPTY;
         return map;
-    }
-
-    public static void main(String[] args) {
-        write(new Info(Maze.decodeLauMaze(), new MazeBlock.Location(0, 0), new MazeBlock.Location(1, 1)), "/Users/Apollonian/Desktop");
-        MazeCoder.print(MazeCoder.encode(read(Paths.get("/Users/Apollonian/Desktop/8_13_0_0_1_1.maze")).getMap()));
     }
 
     public static class Info {
@@ -93,6 +93,8 @@ public enum MazeFile {
             this.map = map.clone();
             this.start = start;
             this.end = end;
+            map[start.getR()][start.getC()] = MazeBlock.EMPTY;
+            map[end.getR()][end.getC()] = MazeBlock.EMPTY;
         }
 
         public MazeBlock[][] getMap() {

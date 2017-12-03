@@ -8,6 +8,7 @@ import io.github.apollozhu.view.MazeCanvas;
 import io.github.apollozhu.view.SpringUtilities;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -19,10 +20,7 @@ import java.util.Arrays;
  * @author ApolloZhu, Pd. 1
  */
 public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListener {
-    //    private static final MazeBlock[][] LAU_MAZE = Maze.decodeLauMaze();
-    private static final MazeBlock[][] LAU_MAZE = MazeFile.read(Paths.get(
-            "/Users/Apollonian/Desktop", "8_13_0_0_1_1.maze"
-    )).getMap();
+    private static final MazeBlock[][] LAU_MAZE = Maze.decodeLauMaze();
 
     private static MazeSolver.Type[] types = MazeSolver.Type.values();
     private final JButton pickStartButton, pickEndButton, editWallButton;
@@ -37,7 +35,6 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     private MazeBlock[][] map;
     private int selectedSolverIndex;
     private double pathPercentage = 0.7;
-
 
     public MazePanel() {
         add(panel, BorderLayout.NORTH);
@@ -106,10 +103,10 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
                         || location.getR() >= map.length || location.getC() >= map[location.getR()].length) return;
                 boolean notWall = !canvas.isWall(location.getR(), location.getC());
                 if (isSelectingStart && notWall) {
-                    canvas.setStart(start = location);
+                    setStart(location);
                     isSelectingStart = false;
                 } else if (isSelectingEnd && notWall) {
-                    canvas.setTarget(end = location);
+                    setEnd(location);
                     isSelectingEnd = false;
                 } else if (isEditingWall && !location.equals(start) && !location.equals(end)) {
                     Maze.clear(map);
@@ -121,7 +118,60 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
             }
         });
         resetStartEnd();
+
+        JMenuBar menuBar = new JMenuBar();
+        Desktop.getDesktop().setDefaultMenuBar(menuBar);
+        JMenu fileMenu = new JMenu("File");
+        menuBar.add(fileMenu);
+        JMenuItem openFileMenuItem = new JMenuItem("Open...");
+        fileMenu.add(openFileMenuItem);
+        openFileMenuItem.addActionListener(l -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Open maze document");
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setFileFilter(new FileNameExtensionFilter("Maze", "maze"));
+            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+                if (loadMap(chooser.getSelectedFile().getPath()))
+                    JOptionPane.showMessageDialog(this,
+                            "Successfully loaded the maze",
+                            "Loaded!", JOptionPane.INFORMATION_MESSAGE);
+                else JOptionPane.showMessageDialog(this,
+                        "Something went wrong when opening the maze.",
+                        "Failed!", JOptionPane.ERROR_MESSAGE);
+            else JOptionPane.showMessageDialog(this,
+                    "You didn't choose a maze.",
+                    "Cancelled!", JOptionPane.WARNING_MESSAGE);
+        });
+        JMenuItem saveFileMenuItem = new JMenuItem("Save as...");
+        fileMenu.add(saveFileMenuItem);
+        saveFileMenuItem.addActionListener(l -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Save maze document");
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String path = MazeFile.write(new MazeFile.Info(map, start, end),
+                        chooser.getSelectedFile().getPath());
+                if (path == null) JOptionPane.showMessageDialog(this,
+                        "Something went wrong when saving the maze.",
+                        "Failed!", JOptionPane.ERROR_MESSAGE);
+                else JOptionPane.showMessageDialog(this,
+                        "Maze saved to " + path,
+                        "Saved!", JOptionPane.INFORMATION_MESSAGE);
+            } else JOptionPane.showMessageDialog(this,
+                    "You didn't choose a directory to save the maze.",
+                    "Cancelled!", JOptionPane.WARNING_MESSAGE);
+        });
     }
+
+    protected boolean loadMap(String file) {
+        MazeFile.Info info = MazeFile.read(Paths.get(file));
+        if (info == null) return false;
+        setMap(info.getMap());
+        setStart(info.getStart());
+        setEnd(info.getEnd());
+        return true;
+    }
+
 
     @Override
     protected Component getCenterComponent() {
@@ -152,26 +202,23 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
 
     protected void regenerateMap(ActionEvent ignored) {
         int r = map.length, c = map[0].length, newR = r, newC = c;
-        double newPrecentage = pathPercentage;
+        double newPercentage = pathPercentage;
         try {
             newR = Integer.parseInt(rowTextField.getText());
             newR = Math.max(Math.min(newR, canvas.getHeight()), 0);
         } catch (Exception e) {
         }
-        rowTextField.setText("" + newR);
         try {
             newC = Integer.parseInt(columnTextField.getText());
             newC = Math.max(Math.min(newC, canvas.getWidth()), 0);
         } catch (Exception e) {
         }
-        columnTextField.setText("" + newC);
         try {
-            newPrecentage = Double.parseDouble(percentageTextField.getText());
-            newPrecentage = Math.max(Math.min(newPrecentage, 1), 0);
+            newPercentage = Double.parseDouble(percentageTextField.getText());
+            newPercentage = Math.max(Math.min(newPercentage, 1), 0);
         } catch (Exception e) {
         }
-        percentageTextField.setText("" + (pathPercentage = newPrecentage));
-        setMap(Maze.generate(newR, newC, pathPercentage));
+        setMap(Maze.generate(newR, newC, newPercentage));
     }
 
     @Override
@@ -200,15 +247,29 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     }
 
     protected void setMap(MazeBlock[][] newMap) {
+        if (newMap == null || newMap.length == 0 || newMap[0].length == 0) return;
         map = newMap.clone();
+        rowTextField.setText("" + map.length);
+        columnTextField.setText("" + map[0].length);
+        percentageTextField.setText("" + pathPercentage);
         canvas.resetMap(map);
         resetStartEnd();
     }
 
+    protected void setStart(MazeBlock.Location start) {
+        map[start.getR()][start.getC()] = MazeBlock.EMPTY;
+        canvas.setStart(this.start = start);
+    }
+
+    protected void setEnd(MazeBlock.Location end) {
+        map[end.getR()][end.getC()] = MazeBlock.EMPTY;
+        canvas.setTarget(this.end = end);
+    }
+
     protected void resetStartEnd() {
         map[0][0] = map[map.length - 1][map[0].length - 1] = MazeBlock.EMPTY;
-        canvas.setStart(start = new MazeBlock.Location(0, 0));
-        canvas.setTarget(end = new MazeBlock.Location(map.length - 1, map[0].length - 1));
+        setStart(new MazeBlock.Location(0, 0));
+        setEnd(new MazeBlock.Location(map.length - 1, map[0].length - 1));
     }
 
     protected void clearMap() {
