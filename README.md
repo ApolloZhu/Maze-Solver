@@ -1,10 +1,6 @@
-# Maze Solver
-
-![Maze Solver](./res/Icon-Mac.png)
+![Maze Solver](./res/GitHub.png)
 
 > Made for Advanced (AP) Computer Science AB.
-
-Creates and solves mazes with different algorithms.
 
 ## Other Maze Programs
 - [@TroyNeubauer](https://github.com/TroyNeubauer/Maze-Solver)
