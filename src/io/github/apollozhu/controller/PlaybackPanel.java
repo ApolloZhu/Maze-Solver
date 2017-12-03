@@ -1,6 +1,5 @@
 package io.github.apollozhu.controller;
 
-import com.sun.javafx.runtime.async.BackgroundExecutor;
 import io.github.apollozhu.view.SpringUtilities;
 
 import javax.swing.*;
@@ -16,7 +15,6 @@ public abstract class PlaybackPanel extends JPanel {
     private final JSlider slider = new JSlider(JSlider.VERTICAL, 0, MAX, 100);
     private final JButton pauseResume = new JButton("Pause");
     Thread thread;
-    private int size;
     private double scaleFactor;
 
     public PlaybackPanel() {
@@ -33,7 +31,7 @@ public abstract class PlaybackPanel extends JPanel {
 
         // Start
         start.addActionListener(ignored -> {
-            BackgroundExecutor.getExecutor().execute(() -> {
+            new Thread(() -> {
                 if (start.getText().equals("Start")) {
                     start.setText("Terminate");
                     pauseResume.setText("Pause");
@@ -41,7 +39,7 @@ public abstract class PlaybackPanel extends JPanel {
                     thread = Thread.currentThread();
                     start();
                 } else terminate();
-            });
+            }).start();
         });
         // Pause Resume
         pauseResume.setEnabled(false);
