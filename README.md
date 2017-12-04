@@ -17,18 +17,9 @@ Please check out the *Downloads* section of the [latest release](https://github.
 
 ### Command line interface
 
-#### *NIX
-
-```bash
-cd path/to/jar
-java -cp Maze\ Solver.jar io.github.apollozhu.mazesolver.CLI
-```
-
-#### Windows
-
-```batch
-cd path\to\jar
-java -cp "Maze Solver.jar" io.github.apollozhu.mazesolver.CLI
+```shell
+cd pathToJAR
+java -cp Maze_Solver.jar io.github.apollozhu.mazesolver.CLI
 ```
 
 ## License
