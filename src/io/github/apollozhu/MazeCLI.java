@@ -36,35 +36,54 @@ public class MazeCLI {
     };
 
     public static void main(String[] args) {
-        // Assume that the exit of the net.fcpsschools._1685666.maze is at
-        // the lower right hand corner of the grid
-        // display the net.fcpsschools._1685666.maze
-        solver.addEventListener(listener);
-        MazeCoder.print(grid);
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Enter current location (x and y coordinates: ");
-        int startX = input.nextInt();
-        int startY = input.nextInt();
-
-        while (!findAnExit(startX, startY)) {
-            System.out.println("Still trapped inside!");
-            MazeCoder.print(grid);
-
-            System.out.println("Re-enter current location (x and y coordinates: ");
-            startX = input.nextInt();
-            startY = input.nextInt();
+        System.out.print("Welcome to Maze Solver.\n" +
+                "1. Solve Mr. Lau's maze (default)\n" +
+                "2. Randomly generates a maze to solve\n" +
+                "> ");
+        CHECK:
+        try {
+            if (Integer.parseInt(input.nextLine()
+                    .split(" ")[0]) != 2) break CHECK;
+            System.out.print("Row: ");
+            int r = input.nextInt();
+            System.out.print("Column: ");
+            int c = input.nextInt();
+            System.out.print("Percentage of empty path: ");
+            double percentage = input.nextDouble();
+            grid = MazeCoder.encode(Maze.generate(r, c, percentage));
+        } catch (Exception e) {
         }
 
-        System.out.println("Successfully exit the net.fcpsschools._1685666.maze!!!");
+        LOOP:
+        solver.addEventListener(listener);
+        int startX, startY, targetX, targetY;
+        do {
+            MazeCoder.print(grid);
+            System.out.print("Enter current x and y coordinates: ");
+            startX = input.nextInt();
+            startY = input.nextInt();
+            System.out.print("Enter target x and y coordinates: ");
+            targetX = input.nextInt();
+            targetY = input.nextInt();
+        } while (!findAnExit(startX, startY, targetX, targetY)
+                && print("Still trapped inside!"));
 
-        // display the path (indicated by 7) that leads to the exit of the net.fcpsschools._1685666.maze
+        System.out.println("Successfully exit the maze!!!");
+
+        // display the path (indicated by 7) that leads to the exit of the maze
         // also display locations tried
         MazeCoder.print(grid);
     }
 
-    private static boolean findAnExit(int x, int y) {
-        return solver.start(MazeCoder.decode(grid, 0, 1, 3, 7), x, y, grid.length - 1, grid[0].length - 1);
+    private static boolean print(String s) {
+        System.out.println(s);
+        return true;
+    }
+
+    private static boolean findAnExit(int x, int y, int tR, int tC) {
+        return solver.start(MazeCoder.decode(grid), x, y, tR, tC);
     }
 }
 
