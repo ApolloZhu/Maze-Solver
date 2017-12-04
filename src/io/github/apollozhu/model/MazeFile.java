@@ -1,5 +1,8 @@
 package io.github.apollozhu.model;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,21 +17,37 @@ import java.util.logging.Logger;
 public enum MazeFile {
     ;
 
-    public static String write(Info info, String directory) {
-        StringBuilder sb = new StringBuilder();
-        int r = info.map.length;
-        int c = info.map[0].length;
-        int sR = info.start.getR();
-        int sC = info.start.getC();
-        int tR = info.end.getR();
-        int tC = info.end.getC();
-        Logger.getGlobal().log(Level.INFO, "validate");
-        if (!isValid(r, c, sR, sC, tR, tC)) return null;
-        Logger.getGlobal().log(Level.INFO, "is valid");
+    public static boolean saveMaze(Component parent, Info info) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Save maze document in...");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (chooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
+            String path = MazeFile.write(info, chooser.getSelectedFile().getPath());
+            if (path == null) JOptionPane.showMessageDialog(parent,
+                    "Something went wrong when saving the maze.",
+                    "Failed!", JOptionPane.ERROR_MESSAGE);
+            else {
+                JOptionPane.showMessageDialog(parent,
+                        "Maze saved to " + path,
+                        "Saved!", JOptionPane.INFORMATION_MESSAGE);
+                Desktop.getDesktop().browseFileDirectory(Paths.get(path).toFile());
+                return true;
+            }
+        } else JOptionPane.showMessageDialog(parent,
+                "You didn't choose a directory to save the maze.",
+                "Cancelled!", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
 
-        sb.append(r).append('_').append(c).append('_');
-        sb.append(sR).append('_').append(sC).append('_');
-        sb.append(tR).append('_').append(tC).append(".maze");
+    public static String write(Info info, String directory) {
+        if (info == null) return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append(info.map.length).append('_');
+        sb.append(info.map[0].length).append('_');
+        sb.append(info.start.getR()).append('_');
+        sb.append(info.start.getC()).append('_');
+        sb.append(info.end.getR()).append('_');
+        sb.append(info.end.getC()).append(".maze");
         String fileName = sb.toString();
         Logger.getGlobal().log(Level.INFO, fileName);
 
@@ -38,9 +57,22 @@ public enum MazeFile {
             Files.write(path, toByteArray(info.map));
             return path.toAbsolutePath().toString();
         } catch (Throwable e) {
-            Logger.getGlobal().log(Level.WARNING, "Failed to save to path", e);
+            Logger.getGlobal().log(Level.WARNING, "Failed to save maze", e);
             return null;
         }
+    }
+
+    public static Info chooseMaze(Component parent) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Open maze document");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Maze (*.maze)", "maze"));
+        if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
+            return MazeFile.read(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+        JOptionPane.showMessageDialog(parent,
+                "You didn't choose a maze.",
+                "Cancelled!", JOptionPane.WARNING_MESSAGE);
+        return null;
     }
 
     public static Info read(Path file) {
@@ -48,9 +80,9 @@ public enum MazeFile {
             int[] comp = Arrays.stream(file.getFileName().toString()
                     .replace(".maze", "").split("_"))
                     .mapToInt(Integer::parseUnsignedInt).toArray();
-            if (!isValid(comp)) return null;
+            if (comp.length < 6) return null;
             MazeBlock[][] map = fromByteArray(Files.readAllBytes(file), comp[0], comp[1]);
-            return new Info(map, new MazeBlock.Location(comp[2], comp[3]),
+            return Info.init(map, new MazeBlock.Location(comp[2], comp[3]),
                     new MazeBlock.Location(comp[4], comp[5]));
         } catch (Exception e) {
             return null;
@@ -86,15 +118,26 @@ public enum MazeFile {
     }
 
     public static class Info {
-        private final MazeBlock[][] map;
-        private final MazeBlock.Location start, end;
+        private MazeBlock[][] map;
+        private MazeBlock.Location start, end;
 
-        public Info(MazeBlock[][] map, MazeBlock.Location start, MazeBlock.Location end) {
-            this.map = map.clone();
-            this.start = start;
-            this.end = end;
+        public static Info init(MazeBlock[][] map, MazeBlock.Location start, MazeBlock.Location end) {
+            int r = map.length;
+            int c = map[0].length;
+            int sR = start.getR();
+            int sC = start.getC();
+            int tR = end.getR();
+            int tC = end.getC();
+            Logger.getGlobal().log(Level.INFO, "validate");
+            if (!isValid(r, c, sR, sC, tR, tC)) return null;
+            Logger.getGlobal().log(Level.INFO, "is valid");
+            Info info = new Info();
+            info.map = map.clone();
+            info.start = start;
+            info.end = end;
             map[start.getR()][start.getC()] = MazeBlock.EMPTY;
             map[end.getR()][end.getC()] = MazeBlock.EMPTY;
+            return info;
         }
 
         public MazeBlock[][] getMap() {

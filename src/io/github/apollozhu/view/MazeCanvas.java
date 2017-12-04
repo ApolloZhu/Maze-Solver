@@ -3,7 +3,6 @@ package io.github.apollozhu.view;
 import io.github.apollozhu.model.MazeBlock;
 import io.github.apollozhu.solver.MazeSolver;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,8 @@ import java.util.function.Supplier;
 /**
  * @author ApolloZhu, Pd. 1
  */
-public class MazeCanvas extends JPanel implements MazeSolver.MSEventListener {
+public class MazeCanvas extends SnapshotablePanel
+        implements MazeSolver.MSEventListener {
     public static final BlockPainter START_PAINTER = (g, r, c, x, y, w, h) -> {
         g.setColor(Color.red);
         g.drawOval(x + w / 5, y + h / 5,
