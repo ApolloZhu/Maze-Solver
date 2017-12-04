@@ -19,12 +19,12 @@ public enum MazeFile {
 
     public static boolean saveMaze(Component parent, Info info) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Save mazesolver document in...");
+        chooser.setDialogTitle("Save maze document in...");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (chooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
             String path = MazeFile.write(info, chooser.getSelectedFile().getPath());
             if (path == null) JOptionPane.showMessageDialog(parent,
-                    "Something went wrong when saving the mazesolver.",
+                    "Something went wrong when saving the maze.",
                     "Failed!", JOptionPane.ERROR_MESSAGE);
             else {
                 JOptionPane.showMessageDialog(parent,
@@ -34,7 +34,7 @@ public enum MazeFile {
                 return true;
             }
         } else JOptionPane.showMessageDialog(parent,
-                "You didn't choose a directory to save the mazesolver.",
+                "You didn't choose a directory to save the maze.",
                 "Cancelled!", JOptionPane.WARNING_MESSAGE);
         return false;
     }
@@ -47,7 +47,7 @@ public enum MazeFile {
         sb.append(info.start.getR()).append('_');
         sb.append(info.start.getC()).append('_');
         sb.append(info.end.getR()).append('_');
-        sb.append(info.end.getC()).append(".mazesolver");
+        sb.append(info.end.getC()).append(".maze");
         String fileName = sb.toString();
         Logger.getGlobal().log(Level.INFO, fileName);
 
@@ -57,20 +57,20 @@ public enum MazeFile {
             Files.write(path, toByteArray(info.map));
             return path.toAbsolutePath().toString();
         } catch (Throwable e) {
-            Logger.getGlobal().log(Level.WARNING, "Failed to save mazesolver", e);
+            Logger.getGlobal().log(Level.WARNING, "Failed to save maze", e);
             return null;
         }
     }
 
     public static Info chooseMaze(Component parent) {
         JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Open mazesolver document");
+        chooser.setDialogTitle("Open maze document");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setFileFilter(new FileNameExtensionFilter("Maze (*.mazesolver)", "mazesolver"));
+        chooser.setFileFilter(new FileNameExtensionFilter("Maze (*.maze)", "maze"));
         if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
             return MazeFile.read(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
         JOptionPane.showMessageDialog(parent,
-                "You didn't choose a mazesolver.",
+                "You didn't choose a maze.",
                 "Cancelled!", JOptionPane.WARNING_MESSAGE);
         return null;
     }
@@ -78,7 +78,7 @@ public enum MazeFile {
     public static Info read(Path file) {
         try {
             int[] comp = Arrays.stream(file.getFileName().toString()
-                    .replace(".mazesolver", "").split("_"))
+                    .replace(".maze", "").split("_"))
                     .mapToInt(Integer::parseUnsignedInt).toArray();
             if (comp.length < 6) return null;
             MazeBlock[][] map = fromByteArray(Files.readAllBytes(file), comp[0], comp[1]);

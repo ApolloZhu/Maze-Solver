@@ -131,10 +131,10 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
             MazeFile.Info info = MazeFile.chooseMaze(this);
             if (info == null) return;
             if (loadMap(info)) JOptionPane.showMessageDialog(this,
-                    "Successfully loaded the mazesolver",
+                    "Successfully loaded the maze",
                     "Loaded!", JOptionPane.INFORMATION_MESSAGE);
             else JOptionPane.showMessageDialog(this,
-                    "Something went wrong when opening the mazesolver.",
+                    "Something went wrong when opening the maze.",
                     "Failed!", JOptionPane.ERROR_MESSAGE);
         });
 
