@@ -1,7 +1,7 @@
-package io.github.apollozhu.view;
+package io.github.apollozhu.mazesolver.view;
 
-import io.github.apollozhu.model.MazeBlock;
-import io.github.apollozhu.solver.MazeSolver;
+import io.github.apollozhu.mazesolver.model.MazeBlock;
+import io.github.apollozhu.mazesolver.solver.MazeSolver;
 
 import java.awt.*;
 import java.util.LinkedList;

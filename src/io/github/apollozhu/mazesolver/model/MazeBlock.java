@@ -1,4 +1,4 @@
-package io.github.apollozhu.model;
+package io.github.apollozhu.mazesolver.model;
 
 /**
  * @author ApolloZhu, Pd. 1

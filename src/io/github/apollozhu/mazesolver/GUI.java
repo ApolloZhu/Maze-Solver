@@ -1,7 +1,7 @@
-package io.github.apollozhu;
+package io.github.apollozhu.mazesolver;
 
-import io.github.apollozhu.controller.AboutPanel;
-import io.github.apollozhu.controller.MazePanel;
+import io.github.apollozhu.mazesolver.controller.AboutPanel;
+import io.github.apollozhu.mazesolver.controller.MazePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 /**
  * @author ApolloZhu, Pd. 1
  */
-public class MazeGUI {
+public class GUI {
     public static void main(String[] args) {
         JFrame frame = new JFrame();
         frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -56,7 +56,7 @@ public class MazeGUI {
 
     private static Image imageNamed(String name) {
         try {
-            return new ImageIcon(MazeGUI.class.getClassLoader().getResource(name)).getImage();
+            return new ImageIcon(GUI.class.getClassLoader().getResource(name)).getImage();
         } catch (Exception e) {
             return null;
         }

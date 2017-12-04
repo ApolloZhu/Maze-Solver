@@ -1,4 +1,4 @@
-package io.github.apollozhu.controller;
+package io.github.apollozhu.mazesolver.controller;
 
 import javax.swing.*;
 import java.awt.*;

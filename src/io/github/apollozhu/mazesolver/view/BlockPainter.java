@@ -1,4 +1,4 @@
-package io.github.apollozhu.view;
+package io.github.apollozhu.mazesolver.view;
 
 import java.awt.*;
 

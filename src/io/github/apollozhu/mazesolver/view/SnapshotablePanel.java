@@ -1,4 +1,4 @@
-package io.github.apollozhu.view;
+package io.github.apollozhu.mazesolver.view;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

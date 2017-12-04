@@ -1,11 +1,11 @@
-package io.github.apollozhu.controller;
+package io.github.apollozhu.mazesolver.controller;
 
-import io.github.apollozhu.model.Maze;
-import io.github.apollozhu.model.MazeBlock;
-import io.github.apollozhu.model.MazeFile;
-import io.github.apollozhu.solver.MazeSolver;
-import io.github.apollozhu.view.MazeCanvas;
-import io.github.apollozhu.view.SpringUtilities;
+import io.github.apollozhu.mazesolver.model.Maze;
+import io.github.apollozhu.mazesolver.model.MazeBlock;
+import io.github.apollozhu.mazesolver.model.MazeFile;
+import io.github.apollozhu.mazesolver.solver.MazeSolver;
+import io.github.apollozhu.mazesolver.view.MazeCanvas;
+import io.github.apollozhu.mazesolver.view.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,10 +131,10 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
             MazeFile.Info info = MazeFile.chooseMaze(this);
             if (info == null) return;
             if (loadMap(info)) JOptionPane.showMessageDialog(this,
-                    "Successfully loaded the maze",
+                    "Successfully loaded the mazesolver",
                     "Loaded!", JOptionPane.INFORMATION_MESSAGE);
             else JOptionPane.showMessageDialog(this,
-                    "Something went wrong when opening the maze.",
+                    "Something went wrong when opening the mazesolver.",
                     "Failed!", JOptionPane.ERROR_MESSAGE);
         });
 

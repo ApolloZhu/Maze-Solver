@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.github.apollozhu.view;
+package io.github.apollozhu.mazesolver.view;
 
 import javax.swing.*;
 import java.awt.*;

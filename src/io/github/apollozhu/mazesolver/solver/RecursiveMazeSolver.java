@@ -1,6 +1,6 @@
-package io.github.apollozhu.solver;
+package io.github.apollozhu.mazesolver.solver;
 
-import io.github.apollozhu.model.MazeBlock;
+import io.github.apollozhu.mazesolver.model.MazeBlock;
 
 /**
  * @author ApolloZhu, Pd. 1

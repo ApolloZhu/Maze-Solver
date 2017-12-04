@@ -1,14 +1,14 @@
-package io.github.apollozhu;
+package io.github.apollozhu.mazesolver;
 
-import io.github.apollozhu.model.Maze;
-import io.github.apollozhu.model.MazeBlock;
-import io.github.apollozhu.model.MazeCoder;
-import io.github.apollozhu.solver.MazeSolver;
-import io.github.apollozhu.solver.RecursiveMazeSolver;
+import io.github.apollozhu.mazesolver.model.Maze;
+import io.github.apollozhu.mazesolver.model.MazeBlock;
+import io.github.apollozhu.mazesolver.model.MazeCoder;
+import io.github.apollozhu.mazesolver.solver.MazeSolver;
+import io.github.apollozhu.mazesolver.solver.RecursiveMazeSolver;
 
 import java.util.Scanner;
 
-public class MazeCLI {
+public class CLI {
     private static int[][] grid = MazeCoder.encode(Maze.decodeLauMaze());
     private static RecursiveMazeSolver solver = new RecursiveMazeSolver();
     private static RecursiveMazeSolver.MSEventListener listener = new MazeSolver.MSEventListener<String>() {
@@ -39,8 +39,8 @@ public class MazeCLI {
         Scanner input = new Scanner(System.in);
 
         System.out.print("Welcome to Maze Solver.\n" +
-                "1. Solve Mr. Lau's maze (default)\n" +
-                "2. Randomly generates a maze to solve\n" +
+                "1. Solve Mr. Lau's mazesolver (default)\n" +
+                "2. Randomly generates a mazesolver to solve\n" +
                 "> ");
         CHECK:
         try {
@@ -70,9 +70,9 @@ public class MazeCLI {
         } while (!findAnExit(startX, startY, targetX, targetY)
                 && print("Still trapped inside!"));
 
-        System.out.println("Successfully exit the maze!!!");
+        System.out.println("Successfully exit the mazesolver!!!");
 
-        // display the path (indicated by 7) that leads to the exit of the maze
+        // display the path (indicated by 7) that leads to the exit of the mazesolver
         // also display locations tried
         MazeCoder.print(grid);
     }
@@ -90,7 +90,7 @@ public class MazeCLI {
 /*
  7 8
  [7,8][7,9][7,10][7,11][7,12]
- Successfully exit the net.fcpsschools._1685666.maze!!!
+ Successfully exit the net.fcpsschools._1685666.mazesolver!!!
 
  3 3 3 0 3 3 0 0 0 3 3 3 3 
  3 0 3 3 3 0 3 3 3 3 0 0 3 
@@ -106,7 +106,7 @@ public class MazeCLI {
  0 0
  [0,0][0,1][0,2][1,2][1,3][1,4][2,4][3,4][3,5][3,6][2,6][1,6][1,7][1,8][2,8][3,8][4,8][4,7][5,7][5,6][5,5][5,4][5,3][5,2]
  [4,2][3,2][3,1][3,0][4,0][5,0][6,0][7,0][7,1][7,2][7,3][7,4][7,5][7,6][7,7][7,8][7,9][7,10][7,11][7,12]
- Successfully exit the net.fcpsschools._1685666.maze!!!
+ Successfully exit the net.fcpsschools._1685666.mazesolver!!!
 
  7 7 7 0 1 1 0 0 0 1 1 1 1 
  3 0 7 7 7 0 7 7 7 1 0 0 1 

@@ -1,6 +1,6 @@
-package io.github.apollozhu.controller;
+package io.github.apollozhu.mazesolver.controller;
 
-import io.github.apollozhu.view.SpringUtilities;
+import io.github.apollozhu.mazesolver.view.SpringUtilities;
 
 import javax.swing.*;
 import java.awt.*;
