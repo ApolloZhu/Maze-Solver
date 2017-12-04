@@ -1,7 +1,8 @@
 package io.github.apollozhu.mazesolver;
 
-import io.github.apollozhu.mazesolver.controller.AboutPanel;
 import io.github.apollozhu.mazesolver.controller.MazePanel;
+import io.github.apollozhu.mazesolver.utilities.Resources;
+import io.github.apollozhu.mazesolver.utilities.Safely;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,55 +11,47 @@ import java.lang.reflect.Method;
 /**
  * @author ApolloZhu, Pd. 1
  */
-public class GUI {
+public enum GUI {
+    ;
+    public static final JFrame frame = new JFrame();
+
     public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setContentPane(new MazePanel());
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize(size);
         frame.setVisible(true);
-        frame.toFront();
-        frame.requestFocus();
-        Desktop.getDesktop().requestForeground(true);
-        customizeFrame(frame);
-        customizeApp(frame);
+        SwingUtilities.invokeLater(() -> {
+            customizeFrame(frame);
+            frame.setContentPane(new MazePanel());
+            frame.toFront();
+            frame.requestFocus();
+            Safely.execute(() -> Desktop.getDesktop().requestForeground(true));
+            customizeApp(frame);
+            frame.setVisible(true);
+        });
     }
 
     private static void customizeFrame(JFrame frame) {
         frame.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setIconImage(imageNamed("Icon.png"));
-        try {
+        frame.setIconImage(Resources.getIcon());
+        Safely.execute(() -> {
             // FIXME: Will be deprecated by Java 9+
             // TODO: http://openjdk.java.net/jeps/272
             Class NSApplication = Class.forName("com.apple.eawt.Application");
             Method sharedApplication = NSApplication.getMethod("getApplication");
             Object shared = sharedApplication.invoke(NSApplication);
             Method setApplicationIconImage = NSApplication.getMethod("setDockIconImage", Image.class);
-            setApplicationIconImage.invoke(shared, imageNamed("Icon-Mac.png"));
-            frame.setIconImage(imageNamed("Icon-Mac.png"));
-        } catch (Exception e) {
-        }
+            setApplicationIconImage.invoke(shared, Resources.imageNamed("Icon-Mac.png"));
+        });
     }
 
     private static void customizeApp(JFrame frame) {
-        Desktop desktop = Desktop.getDesktop();
-        // Add more menus to menubar
+        // Add more menus to menu bar
         // JMenuBar: File, Edit, ... Help
-        // desktop.setDefaultMenuBar(JMenuBar);
         // desktop.setPreferencesHandler(e -> {});
-        // desktop.browseFileDirectory​(File);
         // desktop.moveToTrash(File)
         // desktop.setOpenFileHandler();
         // desktop.setOpenURIHandler();
         // desktop.openHelpViewer();
-        desktop.setAboutHandler(e -> AboutPanel.showOn(frame));
-    }
-
-    private static Image imageNamed(String name) {
-        try {
-            return new ImageIcon(GUI.class.getClassLoader().getResource(name)).getImage();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

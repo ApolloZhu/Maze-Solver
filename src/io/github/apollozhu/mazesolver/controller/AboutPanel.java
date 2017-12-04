@@ -1,5 +1,9 @@
 package io.github.apollozhu.mazesolver.controller;
 
+import io.github.apollozhu.mazesolver.GUI;
+import io.github.apollozhu.mazesolver.utilities.Resources;
+import io.github.apollozhu.mazesolver.utilities.Safely;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URI;
@@ -10,15 +14,14 @@ import java.net.URI;
 public class AboutPanel extends JPanel {
     private final JLabel iconView, name, descrption, version;
     private final JButton github, license;
-
     private final JPanel infoPanel, copyrightsPanel;
 
-    private AboutPanel(Frame parent) {
+    public AboutPanel() {
         setLayout(new BorderLayout());
         add(infoPanel = new JPanel(), BorderLayout.CENTER);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
         infoPanel.setAlignmentX(CENTER_ALIGNMENT);
-        Image icon = parent.getIconImage().getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+        Image icon = Resources.getIcon().getScaledInstance(128, 128, Image.SCALE_SMOOTH);
         infoPanel.add(iconView = new JLabel(new ImageIcon(icon), SwingConstants.CENTER));
         iconView.setPreferredSize(new Dimension(128, 128));
 
@@ -35,8 +38,8 @@ public class AboutPanel extends JPanel {
         descrption.setHorizontalAlignment(SwingConstants.CENTER);
 
         infoPanel.add(Box.createRigidArea(new Dimension(0, 8)));
-
-        infoPanel.add(version = new JLabel("Version 1.0.1", SwingConstants.CENTER));
+        String versionInfo = "Version " + Resources.getAppVersion();
+        infoPanel.add(version = new JLabel(versionInfo, SwingConstants.CENTER));
 
         for (Component comp : infoPanel.getComponents())
             if (comp instanceof JComponent)
@@ -52,17 +55,17 @@ public class AboutPanel extends JPanel {
     }
 
     private static void openURL(String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (Exception e) {
-
-        }
+        Safely.execute(() -> Desktop.getDesktop().browse(new URI(url)));
     }
 
-    public static void showOn(Frame frame) {
-        JDialog dialog = new JDialog(frame, "About Maze Solver", true);
+    public static <T> void display(T any) {
+        display();
+    }
+
+    public static void display() {
+        JDialog dialog = new JDialog(GUI.frame, "About Maze Solver", true);
         dialog.setSize(new Dimension(300, 325));
-        dialog.setContentPane(new AboutPanel(frame));
+        dialog.setContentPane(new AboutPanel());
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         dialog.setLocation((screenSize.width - dialog.getWidth()) / 2,
                 (screenSize.height - dialog.getHeight()) / 2);

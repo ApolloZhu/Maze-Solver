@@ -1,9 +1,11 @@
 package io.github.apollozhu.mazesolver.controller;
 
+import io.github.apollozhu.mazesolver.GUI;
 import io.github.apollozhu.mazesolver.model.Maze;
 import io.github.apollozhu.mazesolver.model.MazeBlock;
 import io.github.apollozhu.mazesolver.model.MazeFile;
 import io.github.apollozhu.mazesolver.solver.MazeSolver;
+import io.github.apollozhu.mazesolver.utilities.Safely;
 import io.github.apollozhu.mazesolver.view.MazeCanvas;
 import io.github.apollozhu.mazesolver.view.SpringUtilities;
 
@@ -21,11 +23,11 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     private static final MazeBlock[][] LAU_MAZE = Maze.decodeLauMaze();
 
     private static MazeSolver.Type[] types = MazeSolver.Type.values();
-    private final JButton pickStartButton, pickEndButton, editWallButton;
-    private final JComboBox<String> solverComboBox;
-    private final JTextField rowTextField, columnTextField, percentageTextField;
     private final JPanel panel = new JPanel(),
             mapGenerationControlPanel = new JPanel(), controlsPanel = new JPanel();
+    private JButton pickStartButton, pickEndButton, editWallButton;
+    private JComboBox<String> solverComboBox;
+    private JTextField rowTextField, columnTextField, percentageTextField;
     private JMenuItem saveImageMenuItem;
     private MazeSolver solver;
     private MazeCanvas canvas;
@@ -39,6 +41,13 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         add(panel, BorderLayout.NORTH);
         panel.setLayout(new GridLayout(2, 1));
         panel.add(mapGenerationControlPanel);
+        panel.add(controlsPanel);
+        SwingUtilities.invokeLater(this::addMazeGenerationControls);
+        SwingUtilities.invokeLater(this::addControls);
+        SwingUtilities.invokeLater(this::addMenu);
+    }
+
+    protected void addMazeGenerationControls() {
         mapGenerationControlPanel.setLayout(new SpringLayout());
 
         mapGenerationControlPanel.add(new JLabel("Row: "));
@@ -57,9 +66,12 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         SpringUtilities.makeCompactGrid(mapGenerationControlPanel,
                 1, mapGenerationControlPanel.getComponentCount(),
                 8, 8, 8, 8);
+        SwingUtilities.updateComponentTreeUI(this);
+    }
 
-        panel.add(controlsPanel);
+    protected void addControls() {
         controlsPanel.setLayout(new SpringLayout());
+
         controlsPanel.add(pickStartButton = new JButton("Pick Start"));
         pickStartButton.addActionListener(l -> {
             isSelectingEnd = false;
@@ -117,11 +129,15 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
             }
         });
         resetStartEnd();
+        SwingUtilities.updateComponentTreeUI(this);
+    }
 
-        // MARK: Menu
-
+    protected void addMenu() {
         JMenuBar menuBar = new JMenuBar();
-        Desktop.getDesktop().setDefaultMenuBar(menuBar);
+        Desktop desktop = Desktop.getDesktop();
+        if (!Safely.execute(() -> desktop.setDefaultMenuBar(menuBar)))
+            GUI.frame.setJMenuBar(menuBar);
+
         JMenu fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
 
@@ -146,6 +162,16 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         saveImageMenuItem = new JMenuItem("Save as image...");
         fileMenu.add(saveImageMenuItem);
         saveImageMenuItem.addActionListener(l -> canvas.saveSnapshot());
+
+        if (!Safely.execute(() -> desktop.setAboutHandler(AboutPanel::display))) {
+            // FIXME: Show about panel somewhere else.
+            JMenu windowMenu = new JMenu("Window");
+            menuBar.add(windowMenu);
+            JMenuItem showAboutMenuItem = new JMenuItem("About");
+            windowMenu.add(showAboutMenuItem);
+            showAboutMenuItem.addActionListener(AboutPanel::display);
+        }
+        SwingUtilities.updateComponentTreeUI(this);
     }
 
     protected boolean loadMap(MazeFile.Info info) {
@@ -201,6 +227,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
             newPercentage = Math.max(Math.min(newPercentage, 1), 0);
         } catch (Exception e) {
         }
+        if (percentageTextField == null) return;
         percentageTextField.setText("" + (pathPercentage = newPercentage));
         setMap(Maze.generate(newR, newC, pathPercentage));
     }

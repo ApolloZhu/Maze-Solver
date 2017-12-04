@@ -1,5 +1,7 @@
 package io.github.apollozhu.mazesolver.view;
 
+import io.github.apollozhu.mazesolver.utilities.Safely;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,7 +28,7 @@ public class SnapshotablePanel extends JPanel {
                 JOptionPane.showMessageDialog(this,
                         "Snapshot saved to " + path,
                         "Saved!", JOptionPane.INFORMATION_MESSAGE);
-                Desktop.getDesktop().browseFileDirectory(file);
+                Safely.execute(() -> Desktop.getDesktop().browseFileDirectory(file));
                 return true;
             } catch (Throwable t) {
                 String message = t.getLocalizedMessage();

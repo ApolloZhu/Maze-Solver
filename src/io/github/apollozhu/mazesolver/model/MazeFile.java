@@ -1,5 +1,7 @@
 package io.github.apollozhu.mazesolver.model;
 
+import io.github.apollozhu.mazesolver.utilities.Safely;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -30,7 +32,7 @@ public enum MazeFile {
                 JOptionPane.showMessageDialog(parent,
                         "Maze saved to " + path,
                         "Saved!", JOptionPane.INFORMATION_MESSAGE);
-                Desktop.getDesktop().browseFileDirectory(Paths.get(path).toFile());
+                Safely.execute(() -> Desktop.getDesktop().browseFileDirectory(Paths.get(path).toFile()));
                 return true;
             }
         } else JOptionPane.showMessageDialog(parent,
