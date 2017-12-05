@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public abstract class PlaybackPanel extends JPanel {
     private final int MAX = 1000;
     private final JButton start = new JButton("Start");
-    private final JSlider slider = new JSlider(JSlider.VERTICAL, 0, MAX, 100);
+    private final JSlider slider = new JSlider(JSlider.VERTICAL, 0, MAX, 10);
     private final JButton pauseResume = new JButton("Pause");
     Thread thread;
     private double scaleFactor;
@@ -106,7 +106,7 @@ public abstract class PlaybackPanel extends JPanel {
         try {
             if (scaleFactor == MAX) return; // Non stop
             double percentage = Math.max(scaleFactor / 100, 0.1);
-            long interval = (long) (unit * 50 / percentage);
+            long interval = (long) (unit * 25 / percentage);
             Thread.sleep(interval);
         } catch (Exception e) {
         }

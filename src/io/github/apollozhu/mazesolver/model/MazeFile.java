@@ -26,7 +26,8 @@ public enum MazeFile {
         if (chooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
             String path = MazeFile.write(info, chooser.getSelectedFile().getPath());
             if (path == null) JOptionPane.showMessageDialog(parent,
-                    "Something went wrong when saving the maze.",
+                    "Something went wrong when saving the maze.\n" +
+                            "Please make sure you have selected a folder.",
                     "Failed!", JOptionPane.ERROR_MESSAGE);
             else {
                 JOptionPane.showMessageDialog(parent,

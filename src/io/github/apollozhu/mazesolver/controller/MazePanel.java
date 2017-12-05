@@ -5,7 +5,6 @@ import io.github.apollozhu.mazesolver.model.Maze;
 import io.github.apollozhu.mazesolver.model.MazeBlock;
 import io.github.apollozhu.mazesolver.model.MazeFile;
 import io.github.apollozhu.mazesolver.solver.MazeSolver;
-import io.github.apollozhu.mazesolver.utilities.Safely;
 import io.github.apollozhu.mazesolver.view.MazeCanvas;
 import io.github.apollozhu.mazesolver.view.SpringUtilities;
 
@@ -15,6 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+
+import static java.awt.Desktop.Action.APP_ABOUT;
+import static java.awt.Desktop.Action.APP_MENU_BAR;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -44,7 +46,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         panel.add(controlsPanel);
         SwingUtilities.invokeLater(this::addMazeGenerationControls);
         SwingUtilities.invokeLater(this::addControls);
-        SwingUtilities.invokeLater(this::addMenu);
+        SwingUtilities.invokeLater(this::addMenuIfNeeded);
     }
 
     protected void addMazeGenerationControls() {
@@ -132,11 +134,8 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         SwingUtilities.updateComponentTreeUI(this);
     }
 
-    protected void addMenu() {
+    public JMenuBar getMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        Desktop desktop = Desktop.getDesktop();
-        if (!Safely.execute(() -> desktop.setDefaultMenuBar(menuBar)))
-            GUI.frame.setJMenuBar(menuBar);
 
         JMenu fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
@@ -163,15 +162,21 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         fileMenu.add(saveImageMenuItem);
         saveImageMenuItem.addActionListener(l -> canvas.saveSnapshot());
 
-        if (!Safely.execute(() -> desktop.setAboutHandler(AboutPanel::display))) {
-            // FIXME: Show about panel somewhere else.
+        if (!Desktop.getDesktop().isSupported(APP_ABOUT)) {
             JMenu windowMenu = new JMenu("Window");
             menuBar.add(windowMenu);
             JMenuItem showAboutMenuItem = new JMenuItem("About");
             windowMenu.add(showAboutMenuItem);
             showAboutMenuItem.addActionListener(AboutPanel::display);
         }
-        SwingUtilities.updateComponentTreeUI(this);
+        return menuBar;
+    }
+
+    protected void addMenuIfNeeded() {
+        if (!Desktop.getDesktop().isSupported(APP_MENU_BAR)) {
+            GUI.frame.setJMenuBar(getMenuBar());
+            SwingUtilities.updateComponentTreeUI(this);
+        }
     }
 
     protected boolean loadMap(MazeFile.Info info) {

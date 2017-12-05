@@ -16,7 +16,7 @@ public class AboutPanel extends JPanel {
     private final JButton github, license;
     private final JPanel infoPanel, copyrightsPanel;
 
-    public AboutPanel() {
+    private AboutPanel() {
         setLayout(new BorderLayout());
         add(infoPanel = new JPanel(), BorderLayout.CENTER);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));

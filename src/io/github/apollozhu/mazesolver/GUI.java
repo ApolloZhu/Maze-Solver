@@ -1,5 +1,6 @@
 package io.github.apollozhu.mazesolver;
 
+import io.github.apollozhu.mazesolver.controller.AboutPanel;
 import io.github.apollozhu.mazesolver.controller.MazePanel;
 import io.github.apollozhu.mazesolver.utilities.Resources;
 import io.github.apollozhu.mazesolver.utilities.Safely;
@@ -19,14 +20,21 @@ public enum GUI {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(size);
         frame.setVisible(true);
+        Desktop desktop = Desktop.getDesktop();
+        Safely.execute(() -> desktop.setAboutHandler(AboutPanel::display));
         SwingUtilities.invokeLater(() -> {
             customizeFrame(frame);
-            frame.setContentPane(new MazePanel());
+            MazePanel panel = new MazePanel();
+            frame.setContentPane(panel);
             frame.toFront();
             frame.requestFocus();
-            Safely.execute(() -> Desktop.getDesktop().requestForeground(true));
+            Safely.execute(() -> desktop.requestForeground(true));
             customizeApp(frame);
             frame.setVisible(true);
+            Safely.execute(() -> {
+                desktop.setDefaultMenuBar(panel.getMenuBar());
+                AboutPanel.display();
+            });
         });
     }
 
