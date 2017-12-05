@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Main-Class: io.github.apollozhu.mazesolver.GUI
+Application-Name: Maze Solver
+Application-Version: 1.0.2
+Application-Description: Creates and solves mazes with different algorithms.
+Bundle-Vendor: Apollo/Zhiyu Zhu/朱智语
