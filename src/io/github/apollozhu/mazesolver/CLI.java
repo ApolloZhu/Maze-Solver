@@ -8,7 +8,7 @@ import io.github.apollozhu.mazesolver.solver.RecursiveMazeSolver;
 
 import java.util.Scanner;
 
-public class CLI {
+public enum CLI {;
     private static int[][] grid = MazeCoder.encode(Maze.decodeLauMaze());
     private static RecursiveMazeSolver solver = new RecursiveMazeSolver();
     private static RecursiveMazeSolver.MSEventListener listener = new MazeSolver.MSEventListener<String>() {

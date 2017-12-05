@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="maze-solver" default="all">
+
+
+  <property file="maze-solver.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+
+  <!-- Compiler options -->
+
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.ane"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+
+  <!-- JDK definitions -->
+
+  <property name="jdk.bin.9.0" value="${jdk.home.9.0}/bin"/>
+  <path id="jdk.classpath.9.0">
+    <fileset dir="${jdk.home.9.0}">
+      <include name="../Home!/java.activation"/>
+      <include name="../Home!/java.base"/>
+      <include name="../Home!/java.compiler"/>
+      <include name="../Home!/java.corba"/>
+      <include name="../Home!/java.datatransfer"/>
+      <include name="../Home!/java.desktop"/>
+      <include name="../Home!/java.instrument"/>
+      <include name="../Home!/java.jnlp"/>
+      <include name="../Home!/java.logging"/>
+      <include name="../Home!/java.management"/>
+      <include name="../Home!/java.management.rmi"/>
+      <include name="../Home!/java.naming"/>
+      <include name="../Home!/java.prefs"/>
+      <include name="../Home!/java.rmi"/>
+      <include name="../Home!/java.scripting"/>
+      <include name="../Home!/java.se"/>
+      <include name="../Home!/java.se.ee"/>
+      <include name="../Home!/java.security.jgss"/>
+      <include name="../Home!/java.security.sasl"/>
+      <include name="../Home!/java.smartcardio"/>
+      <include name="../Home!/java.sql"/>
+      <include name="../Home!/java.sql.rowset"/>
+      <include name="../Home!/java.transaction"/>
+      <include name="../Home!/java.xml"/>
+      <include name="../Home!/java.xml.bind"/>
+      <include name="../Home!/java.xml.crypto"/>
+      <include name="../Home!/java.xml.ws"/>
+      <include name="../Home!/java.xml.ws.annotation"/>
+      <include name="../Home!/javafx.base"/>
+      <include name="../Home!/javafx.controls"/>
+      <include name="../Home!/javafx.deploy"/>
+      <include name="../Home!/javafx.fxml"/>
+      <include name="../Home!/javafx.graphics"/>
+      <include name="../Home!/javafx.media"/>
+      <include name="../Home!/javafx.swing"/>
+      <include name="../Home!/javafx.web"/>
+      <include name="../Home!/jdk.accessibility"/>
+      <include name="../Home!/jdk.attach"/>
+      <include name="../Home!/jdk.charsets"/>
+      <include name="../Home!/jdk.compiler"/>
+      <include name="../Home!/jdk.crypto.cryptoki"/>
+      <include name="../Home!/jdk.crypto.ec"/>
+      <include name="../Home!/jdk.deploy"/>
+      <include name="../Home!/jdk.deploy.controlpanel"/>
+      <include name="../Home!/jdk.dynalink"/>
+      <include name="../Home!/jdk.editpad"/>
+      <include name="../Home!/jdk.hotspot.agent"/>
+      <include name="../Home!/jdk.httpserver"/>
+      <include name="../Home!/jdk.incubator.httpclient"/>
+      <include name="../Home!/jdk.internal.ed"/>
+      <include name="../Home!/jdk.internal.jvmstat"/>
+      <include name="../Home!/jdk.internal.le"/>
+      <include name="../Home!/jdk.internal.opt"/>
+      <include name="../Home!/jdk.internal.vm.ci"/>
+      <include name="../Home!/jdk.jartool"/>
+      <include name="../Home!/jdk.javadoc"/>
+      <include name="../Home!/jdk.javaws"/>
+      <include name="../Home!/jdk.jcmd"/>
+      <include name="../Home!/jdk.jconsole"/>
+      <include name="../Home!/jdk.jdeps"/>
+      <include name="../Home!/jdk.jdi"/>
+      <include name="../Home!/jdk.jdwp.agent"/>
+      <include name="../Home!/jdk.jfr"/>
+      <include name="../Home!/jdk.jlink"/>
+      <include name="../Home!/jdk.jshell"/>
+      <include name="../Home!/jdk.jsobject"/>
+      <include name="../Home!/jdk.jstatd"/>
+      <include name="../Home!/jdk.localedata"/>
+      <include name="../Home!/jdk.management"/>
+      <include name="../Home!/jdk.management.agent"/>
+      <include name="../Home!/jdk.management.cmm"/>
+      <include name="../Home!/jdk.management.jfr"/>
+      <include name="../Home!/jdk.management.resource"/>
+      <include name="../Home!/jdk.naming.dns"/>
+      <include name="../Home!/jdk.naming.rmi"/>
+      <include name="../Home!/jdk.net"/>
+      <include name="../Home!/jdk.pack"/>
+      <include name="../Home!/jdk.packager"/>
+      <include name="../Home!/jdk.packager.services"/>
+      <include name="../Home!/jdk.plugin"/>
+      <include name="../Home!/jdk.plugin.dom"/>
+      <include name="../Home!/jdk.plugin.server"/>
+      <include name="../Home!/jdk.policytool"/>
+      <include name="../Home!/jdk.rmic"/>
+      <include name="../Home!/jdk.scripting.nashorn"/>
+      <include name="../Home!/jdk.scripting.nashorn.shell"/>
+      <include name="../Home!/jdk.sctp"/>
+      <include name="../Home!/jdk.security.auth"/>
+      <include name="../Home!/jdk.security.jgss"/>
+      <include name="../Home!/jdk.snmp"/>
+      <include name="../Home!/jdk.unsupported"/>
+      <include name="../Home!/jdk.xml.bind"/>
+      <include name="../Home!/jdk.xml.dom"/>
+      <include name="../Home!/jdk.xml.ws"/>
+      <include name="../Home!/jdk.zipfs"/>
+      <include name="../Home!/oracle.desktop"/>
+      <include name="../Home!/oracle.net"/>
+    </fileset>
+  </path>
+
+  <property name="project.jdk.home" value="${jdk.home.9.0}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.9.0}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.9.0"/>
+
+
+  <!-- Global Libraries -->
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+
+  <!-- Modules -->
+
+
+  <!-- Module Maze Solver -->
+
+  <dirname property="module.maze_solver.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.maze_solver" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.maze_solver" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.maze_solver" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.maze_solver" value="-encoding UTF-8 -source 9 -target 9 ${compiler.args}"/>
+
+  <property name="maze_solver.output.dir" value="${module.maze_solver.basedir}/out/production/Maze Solver"/>
+  <property name="maze_solver.testoutput.dir" value="${module.maze_solver.basedir}/out/test/Maze Solver"/>
+
+  <path id="maze_solver.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="maze_solver.module.production.classpath">
+    <path refid="${module.jdk.classpath.maze_solver}"/>
+  </path>
+
+  <path id="maze_solver.runtime.production.module.classpath">
+    <pathelement location="${maze_solver.output.dir}"/>
+  </path>
+
+  <path id="maze_solver.module.classpath">
+    <path refid="${module.jdk.classpath.maze_solver}"/>
+    <pathelement location="${maze_solver.output.dir}"/>
+  </path>
+
+  <path id="maze_solver.runtime.module.classpath">
+    <pathelement location="${maze_solver.testoutput.dir}"/>
+    <pathelement location="${maze_solver.output.dir}"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.maze_solver">
+    <patternset refid="ignored.files"/>
+  </patternset>
+
+  <patternset id="excluded.from.compilation.maze_solver">
+    <patternset refid="excluded.from.module.maze_solver"/>
+  </patternset>
+
+  <path id="maze_solver.module.sourcepath">
+    <dirset dir="${module.maze_solver.basedir}">
+      <include name="src"/>
+      <include name="res"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.maze_solver" depends="compile.module.maze_solver.production,compile.module.maze_solver.tests" description="Compile module Maze Solver"/>
+
+  <target name="compile.module.maze_solver.production" depends="register.custom.compilers" description="Compile module Maze Solver; production classes">
+    <mkdir dir="${maze_solver.output.dir}"/>
+    <javac2 destdir="${maze_solver.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.maze_solver}/javac">
+      <compilerarg line="${compiler.args.maze_solver}"/>
+      <bootclasspath refid="maze_solver.module.bootclasspath"/>
+      <classpath refid="maze_solver.module.production.classpath"/>
+      <src refid="maze_solver.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.maze_solver"/>
+    </javac2>
+
+    <copy todir="${maze_solver.output.dir}">
+      <fileset dir="${module.maze_solver.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.maze_solver.basedir}/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.maze_solver.tests" depends="register.custom.compilers,compile.module.maze_solver.production" description="compile module Maze Solver; test classes" unless="skip.tests"/>
+
+  <target name="clean.module.maze_solver" description="cleanup module">
+    <delete dir="${maze_solver.output.dir}"/>
+    <delete dir="${maze_solver.testoutput.dir}"/>
+  </target>
+
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+
+  <target name="clean" depends="clean.module.maze_solver, clean.artifact.maze_solver" description="cleanup all"/>
+
+  <target name="build.modules" depends="init, clean, compile.module.maze_solver" description="build all modules"/>
+
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.maze_solver" value="${basedir}/out/artifacts/Maze_Solver"/>
+    <property name="artifact.output.maze_solver:jar" value="${basedir}/out/artifacts/Maze_Solver_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="artifact.temp.output.Maze_Solver" value="${artifacts.temp.dir}/Maze_Solver.jar"/>
+    <property name="temp.jar.path.Maze_Solver.jar" value="${artifacts.temp.dir}/1/Maze_Solver.jar"/>
+    <mkdir dir="${artifacts.temp.dir}/1"/>
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home.9.0}/lib/ant-javafx.jar"/>
+  </target>
+
+  <target name="clean.artifact.maze_solver" description="clean Maze Solver artifact output">
+    <delete dir="${artifact.output.maze_solver}"/>
+  </target>
+
+  <target name="artifact.maze_solver" depends="init.artifacts, compile.module.maze_solver" description="Build &#39;Maze Solver&#39; artifact" xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <mkdir dir="${artifact.output.maze_solver}"/>
+    <copy todir="${artifact.temp.output.Maze_Solver}">
+      <fileset dir="${maze_solver.output.dir}"/>
+    </copy>
+    <fx:fileset id="all_but_Maze_Solver" dir="${artifact.temp.output.Maze_Solver}" includes="**/*.jar">
+      <exclude name="Maze_Solver.jar"/>
+    </fx:fileset>
+    <fx:fileset id="all_Maze_Solver" dir="${artifact.temp.output.Maze_Solver}" includes="**/*.jar"/>
+    <fx:application id="Maze_Solver_id" name="Maze Solver" mainClass="io.github.apollozhu.mazesolver.JavaFX" version="1.0.3"/>
+    <fx:jar destfile="${artifact.temp.output.Maze_Solver}/Maze_Solver.jar">
+      <fx:application refid="Maze_Solver_id"/>
+      <fileset dir="${artifact.temp.output.Maze_Solver}" excludes="**/*.jar"/>
+      <fx:resources>
+        <fx:fileset refid="all_but_Maze_Solver"/>
+      </fx:resources>
+      <manifest>
+        <attribute name="Implementation-Title" value="Maze Solver"/>
+        <attribute name="Implementation-Version" value="1.0.3"/>
+        <attribute name="Implementation-Vendor" value="Apollo/Zhiyu Zhu/朱智语"/>
+      </manifest>
+    </fx:jar>
+    <fx:deploy width="0" height="0" updatemode="background" outdir="${artifact.temp.output.Maze_Solver}/deploy" outfile="Maze_Solver" nativeBundles="all">
+      <fx:permissions elevated="true"/>
+      <fx:application refid="Maze_Solver_id"/>
+      <fx:info title="Maze Solver" vendor="Apollo/Zhiyu Zhu/朱智语" description="Creates and solves mazes, with different algorithms." license="MIT" copyright="Copyright (c) 2017 Zhiyu Zhu/朱智语">
+        <fx:association extension="maze" mimetype="application/x-binary" description="Maze Solver Binary Archive" />
+      </fx:info>
+      <fx:resources>
+        <fx:fileset refid="all_Maze_Solver"/>
+      </fx:resources>
+    </fx:deploy>
+    <property name="artifact.sign.vendor.Maze_Solver" value="CN=Apollo/Zhiyu Zhu/朱智语"/>
+    <property name="artifact.sign.alias.Maze_Solver" value="jb"/>
+    <property name="artifact.sign.keystore.Maze_Solver" value="${artifact.temp.output.Maze_Solver}/jb-key.jks"/>
+    <property name="artifact.sign.storepass.Maze_Solver" value="storepass"/>
+    <property name="artifact.sign.keypass.Maze_Solver" value="keypass"/>
+    <genkey dname="${artifact.sign.vendor.Maze_Solver}" alias="${artifact.sign.alias.Maze_Solver}" keystore="${artifact.sign.keystore.Maze_Solver}" storepass="${artifact.sign.storepass.Maze_Solver}" keypass="${artifact.sign.keypass.Maze_Solver}"/>
+    <signjar alias="${artifact.sign.alias.Maze_Solver}" keystore="${artifact.sign.keystore.Maze_Solver}" storepass="${artifact.sign.storepass.Maze_Solver}" keypass="${artifact.sign.keypass.Maze_Solver}">
+      <fileset dir="${artifact.temp.output.Maze_Solver}/deploy">
+        <include name="*.jar"/>
+      </fileset>
+    </signjar>
+    <copy todir="${artifact.output.maze_solver}">
+      <fileset dir="${artifact.temp.output.Maze_Solver}/deploy"/>
+    </copy>
+    <delete includeemptydirs="true">
+      <fileset dir="${artifact.temp.output.Maze_Solver}"/>
+    </delete>
+  </target>
+
+  <target name="artifact.maze_solver:jar" depends="init.artifacts, compile.module.maze_solver" description="Build &#39;Maze Solver:jar&#39; artifact">
+    <property name="artifact.temp.output.maze_solver:jar" value="${artifacts.temp.dir}/Maze_Solver_jar"/>
+    <mkdir dir="${artifact.temp.output.maze_solver:jar}"/>
+    <jar destfile="${temp.jar.path.Maze_Solver.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${maze_solver.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.Maze_Solver.jar}" tofile="${artifact.temp.output.maze_solver:jar}/Maze_Solver.jar"/>
+  </target>
+
+  <target name="build.all.artifacts" depends="artifact.maze_solver, artifact.maze_solver:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.maze_solver:jar}"/>
+    <copy todir="${artifact.output.maze_solver:jar}">
+      <fileset dir="${artifact.temp.output.maze_solver:jar}"/>
+    </copy>
+
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

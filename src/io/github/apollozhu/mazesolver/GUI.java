@@ -7,7 +7,6 @@ import io.github.apollozhu.mazesolver.utilities.Safely;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Method;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -42,15 +41,7 @@ public enum GUI {
         frame.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setIconImage(Resources.getIcon());
-        Safely.execute(() -> {
-            // FIXME: Will be deprecated by Java 9+
-            // TODO: http://openjdk.java.net/jeps/272
-            Class NSApplication = Class.forName("com.apple.eawt.Application");
-            Method sharedApplication = NSApplication.getMethod("getApplication");
-            Object shared = sharedApplication.invoke(NSApplication);
-            Method setApplicationIconImage = NSApplication.getMethod("setDockIconImage", Image.class);
-            setApplicationIconImage.invoke(shared, Resources.imageNamed("Icon-Mac.png"));
-        });
+        Resources.trySetMacOSDockIcon();
     }
 
     private static void customizeApp(JFrame frame) {
