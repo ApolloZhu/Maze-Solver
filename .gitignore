@@ -2,6 +2,7 @@
 .idea/vcs.xml
 .idea/workspace.xml
 out/
+__artifacts_temp
 
 # Compiled class file
 *.class
