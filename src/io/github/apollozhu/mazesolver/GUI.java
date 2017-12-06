@@ -13,10 +13,11 @@ import java.awt.*;
  */
 public enum GUI {
     ;
-    public static final JFrame frame = new JFrame();
+    public static JFrame frame;
 
     public static void main(String[] args) {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        frame = new JFrame();
         frame.setSize(size);
         frame.setVisible(true);
         Desktop desktop = Desktop.getDesktop();

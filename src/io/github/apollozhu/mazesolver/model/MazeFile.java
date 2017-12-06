@@ -1,5 +1,6 @@
 package io.github.apollozhu.mazesolver.model;
 
+import io.github.apollozhu.mazesolver.controller.TopDialog;
 import io.github.apollozhu.mazesolver.utilities.Safely;
 
 import javax.swing.*;
@@ -19,10 +20,11 @@ import java.util.logging.Logger;
 public enum MazeFile {
     ;
 
-    public static boolean saveMaze(Component parent, Info info) {
+    public static boolean saveMaze(Info info) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Save maze document in...");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        JDialog parent = TopDialog.getDialog();
         if (chooser.showSaveDialog(parent) == JFileChooser.APPROVE_OPTION) {
             String path = MazeFile.write(info, chooser.getSelectedFile().getPath());
             if (path == null) JOptionPane.showMessageDialog(parent,
@@ -65,13 +67,16 @@ public enum MazeFile {
         }
     }
 
-    public static Info chooseMaze(Component parent) {
+    public static Info chooseMaze() {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Open maze document");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("Maze (*.maze)", "maze"));
-        if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION)
-            return MazeFile.read(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+        JDialog parent = TopDialog.getDialog();
+        if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+            Info info = MazeFile.read(Paths.get(chooser.getSelectedFile().getAbsolutePath()));
+            return info;
+        }
         JOptionPane.showMessageDialog(parent,
                 "You didn't choose a maze.",
                 "Cancelled!", JOptionPane.WARNING_MESSAGE);

@@ -47,7 +47,7 @@ public abstract class PlaybackPanel extends JPanel {
                         if (message == null || message.isEmpty())
                             message = "Something went wrong. Please see system log for details.";
                         Logger.getGlobal().log(Level.WARNING, "Subclass implementation failed", t);
-                        JOptionPane.showMessageDialog(this,
+                        JOptionPane.showMessageDialog(TopDialog.getDialog(),
                                 message, "Oops!", JOptionPane.WARNING_MESSAGE);
                         terminate();
                     }

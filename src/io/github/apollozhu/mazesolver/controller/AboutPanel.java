@@ -1,6 +1,5 @@
 package io.github.apollozhu.mazesolver.controller;
 
-import io.github.apollozhu.mazesolver.GUI;
 import io.github.apollozhu.mazesolver.utilities.Resources;
 import io.github.apollozhu.mazesolver.utilities.Safely;
 
@@ -63,7 +62,9 @@ public class AboutPanel extends JPanel {
     }
 
     public static void display() {
-        JDialog dialog = new JDialog(GUI.frame, "About Maze Solver", true);
+        JDialog dialog = TopDialog.getDialog();
+        dialog.setTitle("About Maze Solver");
+        dialog.setModal(true);
         dialog.setSize(new Dimension(300, 325));
         dialog.setContentPane(new AboutPanel());
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -1,5 +1,6 @@
 package io.github.apollozhu.mazesolver.view;
 
+import io.github.apollozhu.mazesolver.controller.TopDialog;
 import io.github.apollozhu.mazesolver.utilities.Safely;
 
 import javax.imageio.ImageIO;
@@ -19,13 +20,13 @@ public class SnapshotablePanel extends JPanel {
         chooser.setFileFilter(new FileNameExtensionFilter("Image (*.png)", "png"));
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setDialogTitle("Save snapshot");
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showSaveDialog(TopDialog.getDialog()) == JFileChooser.APPROVE_OPTION) {
             try {
                 String path = chooser.getSelectedFile().getAbsolutePath();
                 if (!path.endsWith(".png")) path += ".png";
                 File file = Paths.get(path).toFile();
                 ImageIO.write(toImage(), "png", file);
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(TopDialog.getDialog(),
                         "Snapshot saved to " + path,
                         "Saved!", JOptionPane.INFORMATION_MESSAGE);
                 Safely.execute(() -> Desktop.getDesktop().browseFileDirectory(file));
@@ -34,11 +35,10 @@ public class SnapshotablePanel extends JPanel {
                 String message = t.getLocalizedMessage();
                 if (message == null || message.isEmpty())
                     message = "Something went wrong when saving the snapshot.";
-                JOptionPane.showMessageDialog(this, message,
+                JOptionPane.showMessageDialog(TopDialog.getDialog(), message,
                         "Failed!", JOptionPane.ERROR_MESSAGE);
-                return false;
             }
-        } else JOptionPane.showMessageDialog(this,
+        } else JOptionPane.showMessageDialog(TopDialog.getDialog(),
                 "You didn't choose a file to save the snapshot as.",
                 "Cancelled!", JOptionPane.WARNING_MESSAGE);
         return false;

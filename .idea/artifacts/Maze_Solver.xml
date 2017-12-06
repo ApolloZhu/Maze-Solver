@@ -7,6 +7,12 @@
         <option name="description" value="Creates and solves mazes with different algorithms." />
         <option name="height" value="0" />
         <option name="htmlPlaceholderId" value="" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="macIcon" value="$PROJECT_DIR$/res/Maze Solver.icns" />
+            <option name="windowsIcon" value="$PROJECT_DIR$/res/Maze Solver.ico" />
+          </JavaFxApplicationIcons>
+        </option>
         <option name="nativeBundle" value="all" />
         <option name="title" value="Maze Solver" />
         <option name="vendor" value="Apollo/Zhiyu Zhu/朱智语" />

@@ -5,6 +5,7 @@ import io.github.apollozhu.mazesolver.model.Maze;
 import io.github.apollozhu.mazesolver.model.MazeBlock;
 import io.github.apollozhu.mazesolver.model.MazeFile;
 import io.github.apollozhu.mazesolver.solver.MazeSolver;
+import io.github.apollozhu.mazesolver.utilities.Resources;
 import io.github.apollozhu.mazesolver.view.MazeCanvas;
 import io.github.apollozhu.mazesolver.view.SpringUtilities;
 
@@ -16,7 +17,6 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 import static java.awt.Desktop.Action.APP_ABOUT;
-import static java.awt.Desktop.Action.APP_MENU_BAR;
 
 /**
  * @author ApolloZhu, Pd. 1
@@ -143,20 +143,19 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
         JMenuItem openFileMenuItem = new JMenuItem("Open...");
         fileMenu.add(openFileMenuItem);
         openFileMenuItem.addActionListener(l -> {
-            MazeFile.Info info = MazeFile.chooseMaze(this);
+            MazeFile.Info info = MazeFile.chooseMaze();
             if (info == null) return;
-            if (loadMap(info)) JOptionPane.showMessageDialog(this,
+            if (loadMap(info)) JOptionPane.showMessageDialog(TopDialog.getDialog(),
                     "Successfully loaded the maze",
                     "Loaded!", JOptionPane.INFORMATION_MESSAGE);
-            else JOptionPane.showMessageDialog(this,
+            else JOptionPane.showMessageDialog(TopDialog.getDialog(),
                     "Something went wrong when opening the maze.",
                     "Failed!", JOptionPane.ERROR_MESSAGE);
         });
 
         JMenuItem saveFileMenuItem = new JMenuItem("Save to folder...");
         fileMenu.add(saveFileMenuItem);
-        saveFileMenuItem.addActionListener(l ->
-                MazeFile.saveMaze(this, MazeFile.Info.init(map, start, end)));
+        saveFileMenuItem.addActionListener(l -> MazeFile.saveMaze(MazeFile.Info.init(map, start, end)));
 
         saveImageMenuItem = new JMenuItem("Save as image...");
         fileMenu.add(saveImageMenuItem);
@@ -173,10 +172,9 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
     }
 
     protected void addMenuIfNeeded() {
-        if (!Desktop.getDesktop().isSupported(APP_MENU_BAR)) {
-            GUI.frame.setJMenuBar(getMenuBar());
-            SwingUtilities.updateComponentTreeUI(this);
-        }
+        if (Resources.isMacOS() || GUI.frame == null) return;
+        GUI.frame.setJMenuBar(getMenuBar());
+        SwingUtilities.updateComponentTreeUI(this);
     }
 
     protected boolean loadMap(MazeFile.Info info) {
@@ -331,7 +329,7 @@ public class MazePanel extends PlaybackPanel implements MazeSolver.MSEventListen
 
     @Override
     public void ended(boolean hasPath, MazeBlock[][] map) {
-        JOptionPane.showMessageDialog(this, hasPath ? "It is doable." : "Can do better.");
+        JOptionPane.showMessageDialog(TopDialog.getDialog(), hasPath ? "It is doable." : "Can do better.");
         terminate(hasPath);
     }
 
