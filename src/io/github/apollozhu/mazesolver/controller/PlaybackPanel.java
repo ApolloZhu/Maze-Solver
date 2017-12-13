@@ -16,7 +16,7 @@ public abstract class PlaybackPanel extends JPanel {
     private final JButton start = new JButton("Start");
     private final JSlider slider = new JSlider(JSlider.VERTICAL, 0, MAX, 10);
     private final JButton pauseResume = new JButton("Pause");
-    Thread thread;
+    private Thread thread;
     private double scaleFactor;
 
     public PlaybackPanel() {

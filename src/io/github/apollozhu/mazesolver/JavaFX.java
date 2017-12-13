@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -60,13 +61,14 @@ public class JavaFX extends Application {
 
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         primaryStage.setTitle("Maze Solver - Zhiyu Zhu, Period 1");
-        primaryStage.getIcons().add(new javafx.scene.image.Image(Resources.getIconName()));
+        primaryStage.getIcons().add(new Image(Resources.getIconName()));
         Scene scene = new Scene(root, size.getWidth(), size.getHeight());
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(e -> {
             Platform.exit();
             System.exit(0);
         });
+        primaryStage.setFullScreen(true);
         primaryStage.show();
     }
 }
