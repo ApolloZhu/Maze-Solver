@@ -118,7 +118,7 @@ public class MazeCanvas extends SnapshotablePanel
         setMap(map);
     }
 
-    private static BlockPainter dependentPainter(Supplier<Color> color, DiPredicate condition) {
+    private BlockPainter dependentPainter(Supplier<Color> color, DiPredicate condition) {
         return (graphics, r, c, x, y, w, h) -> {
             Graphics2D g = (Graphics2D) graphics;
             g.setColor(color.get());
@@ -129,6 +129,11 @@ public class MazeCanvas extends SnapshotablePanel
                 for (int j = c - 1; j <= c + 1; j++, k++)
                     if (condition.test(r, c, i, j)) {
                         hasNeighbor = true;
+                        if (diff != null && isPath(r, c) &&
+                                diff.r == i && diff.c == j &&
+                                diff.direction.dx() == r - i &&
+                                diff.direction.dy() == c - j
+                        ) continue;
                         int vX = k % 3, vY = k / 3;
                         int lX = vX == 0 ? x : vX == 1 ? centerX : x + w;
                         int lY = vY == 0 ? y : vY == 1 ? centerY : y + h;
